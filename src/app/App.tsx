@@ -102,8 +102,6 @@ export default function App() {
         route={ui.route}
         onRoute={(r) => dispatch({ type: "navigate", route: r })}
         area={activeArea}
-        areas={areas}
-        onArea={setActiveArea}
         dark={ui.dark}
         onDark={() => dispatch({ type: "toggleDark" })}
         totalActiveAlerts={totalActive}
@@ -113,6 +111,8 @@ export default function App() {
             alerts={alerts}
             loading={alertsLoading}
             area={activeArea}
+            areas={areas}
+            onArea={setActiveArea}
             onOpen={(alert) => dispatch({ type: "openAlert", alert })}
             onAcknowledge={acknowledge}
           />
@@ -144,6 +144,7 @@ export default function App() {
         {ui.route === "history" && (
           <Historical
             initialArea={activeArea}
+            onArea={setActiveArea}
             onExport={() => dispatch({ type: "openExport" })}
           />
         )}

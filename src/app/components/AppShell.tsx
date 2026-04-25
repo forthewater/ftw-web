@@ -1,25 +1,6 @@
 import { useState } from "react"
-import {
-  Bell,
-  Map,
-  Clock,
-  Settings,
-  Check,
-  ChevronDown,
-  Moon,
-  Sun,
-  Menu,
-  X,
-} from "lucide-react"
+import { Bell, Map, Clock, Settings, Moon, Sun, Menu, X } from "lucide-react"
 import { Button } from "./ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  DropdownMenuSeparator,
-  DropdownMenuLabel,
-} from "./ui/dropdown-menu"
 import type { Area } from "../lib/data"
 
 export type Route = "alerts" | "areas" | "history" | "settings"
@@ -28,8 +9,6 @@ export function AppShell({
   route,
   onRoute,
   area,
-  areas,
-  onArea,
   dark,
   onDark,
   children,
@@ -38,8 +17,6 @@ export function AppShell({
   route: Route
   onRoute: (r: Route) => void
   area: Area | null
-  areas: Area[]
-  onArea: (a: Area | null) => void
   dark: boolean
   onDark: () => void
   totalActiveAlerts: number
@@ -186,57 +163,23 @@ export function AppShell({
             >
               <Menu size={18} />
             </button>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="gap-2 min-w-0 max-w-[200px] sm:max-w-none"
-                >
-                  <span
-                    style={{
-                      width: 6,
-                      height: 6,
-                      borderRadius: 999,
-                      background: "var(--primary)",
-                    }}
-                    className="shrink-0"
-                  />
-                  <span className="truncate">
-                    {area ? area.name : "All areas"}
-                  </span>
-                  <ChevronDown size={14} className="shrink-0" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" style={{ minWidth: 240 }}>
-                <DropdownMenuLabel>Switch monitored area</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => onArea(null)}>
-                  <span className="flex-1">All areas</span>
-                  {!area && <Check size={14} />}
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                {areas.map((a) => (
-                  <DropdownMenuItem key={a.id} onClick={() => onArea(a)}>
-                    <span className="flex-1">
-                      {a.name}
-                      {a.activeAlerts > 0 && (
-                        <span
-                          style={{
-                            marginLeft: 6,
-                            fontSize: 11,
-                            color: "var(--severity-critical)",
-                          }}
-                        >
-                          · {a.activeAlerts}
-                        </span>
-                      )}
-                    </span>
-                    {area?.id === a.id && <Check size={14} />}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <div className="flex items-center gap-2 min-w-0">
+              <span
+                style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: 999,
+                  background: "var(--primary)",
+                  flexShrink: 0,
+                }}
+              />
+              <span
+                className="truncate"
+                style={{ fontSize: 13, fontWeight: 500 }}
+              >
+                {area ? area.name : "All areas"}
+              </span>
+            </div>
           </div>
 
           <div
@@ -245,7 +188,7 @@ export function AppShell({
           >
             {area
               ? `Last pass: ${area.lastPass} · Next: ${area.nextPass}`
-              : `${areas.filter((a) => a.active).length} active areas`}
+              : null}
           </div>
         </header>
 
