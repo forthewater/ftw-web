@@ -18,12 +18,34 @@ export const INDEX_DESCRIPTIONS: Record<Index, string> = {
 export type Area = {
   id: string;
   name: string;
-  bbox: { west: number; south: number; east: number; north: number };
+  bbox?: BBox;
+  polygon?: PolygonPoint[];
+  warning?: string | null;
   active: boolean;
   lastPass: string;
   nextPass: string;
   activeAlerts: number;
   indices: Index[];
+};
+
+export type BBox = { west: number; south: number; east: number; north: number };
+
+export type PolygonPoint = {
+  lat: number;
+  lon: number;
+};
+
+export type Pin = {
+  id: string;
+  areaId: string;
+  name: string;
+  lon: number;
+  lat: number;
+  ndci: number;
+  ndti: number;
+  ndwi: number;
+  severity: Severity;
+  lastReading: string;
 };
 
 export type Alert = {
@@ -155,6 +177,32 @@ export const alerts: Alert[] = [
     summary: "Routine pass. All indices nominal.",
     recommendation: "No action required.",
   },
+];
+
+export const pins: Pin[] = [
+  { id: "iskar-pin-0",     areaId: "iskar",     name: "North inlet",   lon: 23.629844, lat: 42.425181, ndci: 0.18, ndti: -0.04, ndwi: 0.6619, severity: "warning",  lastReading: "Apr 22, 2026" },
+  { id: "iskar-pin-1",     areaId: "iskar",     name: "Central basin", lon: 23.595595, lat: 42.454477, ndci: 0.21, ndti: -0.06, ndwi: 0.6520, severity: "critical", lastReading: "Apr 22, 2026" },
+  { id: "iskar-pin-2",     areaId: "iskar",     name: "Dam outflow",   lon: 23.551940, lat: 42.463921, ndci: 0.05, ndti: -0.08, ndwi: 0.6423, severity: "ok",       lastReading: "Apr 22, 2026" },
+  { id: "iskar-pin-3",     areaId: "iskar",     name: "South cove",    lon: 23.566851, lat: 42.422908, ndci: 0.13, ndti: -0.05, ndwi: 0.6486, severity: "warning",  lastReading: "Apr 22, 2026" },
+  { id: "iskar-pin-4",     areaId: "iskar",     name: "East shore",    lon: 23.558982, lat: 42.418978, ndci: 0.07, ndti: -0.07, ndwi: 0.6405, severity: "ok",       lastReading: "Apr 22, 2026" },
+
+  { id: "varna-pin-0",     areaId: "varna",     name: "North inlet",   lon: 27.893580, lat: 43.209252, ndci: 0.18, ndti: -0.04, ndwi: 0.6672, severity: "warning",  lastReading: "Apr 21, 2026" },
+  { id: "varna-pin-1",     areaId: "varna",     name: "Central basin", lon: 27.883489, lat: 43.235668, ndci: 0.21, ndti: -0.06, ndwi: 0.6667, severity: "critical", lastReading: "Apr 21, 2026" },
+  { id: "varna-pin-2",     areaId: "varna",     name: "Dam outflow",   lon: 28.012961, lat: 43.242551, ndci: 0.05, ndti: -0.08, ndwi: 0.6474, severity: "ok",       lastReading: "Apr 21, 2026" },
+  { id: "varna-pin-3",     areaId: "varna",     name: "South cove",    lon: 27.973298, lat: 43.207963, ndci: 0.13, ndti: -0.05, ndwi: 0.6609, severity: "warning",  lastReading: "Apr 21, 2026" },
+  { id: "varna-pin-4",     areaId: "varna",     name: "East shore",    lon: 27.953005, lat: 43.232034, ndci: 0.07, ndti: -0.07, ndwi: 0.6612, severity: "ok",       lastReading: "Apr 21, 2026" },
+
+  { id: "batak-pin-0",     areaId: "batak",     name: "North inlet",   lon: 24.228314, lat: 42.008882, ndci: 0.18, ndti: -0.04, ndwi: 0.6705, severity: "warning",  lastReading: "Apr 22, 2026" },
+  { id: "batak-pin-1",     areaId: "batak",     name: "Central basin", lon: 24.153687, lat: 42.001892, ndci: 0.21, ndti: -0.06, ndwi: 0.6472, severity: "critical", lastReading: "Apr 22, 2026" },
+  { id: "batak-pin-2",     areaId: "batak",     name: "Dam outflow",   lon: 24.163511, lat: 42.002118, ndci: 0.05, ndti: -0.08, ndwi: 0.6797, severity: "ok",       lastReading: "Apr 22, 2026" },
+  { id: "batak-pin-3",     areaId: "batak",     name: "South cove",    lon: 24.149622, lat: 42.021394, ndci: 0.13, ndti: -0.05, ndwi: 0.6434, severity: "warning",  lastReading: "Apr 22, 2026" },
+  { id: "batak-pin-4",     areaId: "batak",     name: "East shore",    lon: 24.137771, lat: 41.989780, ndci: 0.07, ndti: -0.07, ndwi: 0.6647, severity: "ok",       lastReading: "Apr 22, 2026" },
+
+  { id: "kardzhali-pin-0", areaId: "kardzhali", name: "North inlet",   lon: 25.377027, lat: 41.613784, ndci: 0.18, ndti: -0.04, ndwi: 0.6441, severity: "warning",  lastReading: "Mar 10, 2026" },
+  { id: "kardzhali-pin-1", areaId: "kardzhali", name: "Central basin", lon: 25.337446, lat: 41.642364, ndci: 0.21, ndti: -0.06, ndwi: 0.6616, severity: "critical", lastReading: "Mar 10, 2026" },
+  { id: "kardzhali-pin-2", areaId: "kardzhali", name: "Dam outflow",   lon: 25.349033, lat: 41.606543, ndci: 0.05, ndti: -0.08, ndwi: 0.6673, severity: "ok",       lastReading: "Mar 10, 2026" },
+  { id: "kardzhali-pin-3", areaId: "kardzhali", name: "South cove",    lon: 25.395073, lat: 41.655269, ndci: 0.13, ndti: -0.05, ndwi: 0.6660, severity: "warning",  lastReading: "Mar 10, 2026" },
+  { id: "kardzhali-pin-4", areaId: "kardzhali", name: "East shore",    lon: 25.408886, lat: 41.642621, ndci: 0.07, ndti: -0.07, ndwi: 0.6612, severity: "ok",       lastReading: "Mar 10, 2026" },
 ];
 
 export const trendNDCI = [

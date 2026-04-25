@@ -8,8 +8,11 @@ import { Switch } from "./ui/switch";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { BBoxMap } from "./BBoxMap";
 import { INDICES, DEFAULT_THRESHOLDS, INDEX_DESCRIPTIONS, type Index, type Area } from "../lib/data";
+import { getGeometryBounds } from "../lib/geometry";
 
 type Idx = Index;
+
+const DEFAULT_BBOX = { west: 23.52, south: 42.40, east: 23.65, north: 42.52 };
 
 export function AreaDrawer({
   open,
@@ -21,24 +24,28 @@ export function AreaDrawer({
   open: boolean;
   onOpenChange: (b: boolean) => void;
   area: Area | null;
-  onSave: (a: Area) => void;
+  onSave: (a: Area) => void | Promise<void>;
   onDelete?: (id: string) => void;
 }) {
   const isNew = !area;
   const [name, setName] = useState(area?.name ?? "");
-  const [bbox, setBbox] = useState(area?.bbox ?? { west: 23.52, south: 42.40, east: 23.65, north: 42.52 });
+  const [bbox, setBbox] = useState(getGeometryBounds(area ?? {}) ?? DEFAULT_BBOX);
   const [indices, setIndices] = useState<Idx[]>((area?.indices as Idx[]) ?? ["NDCI", "NDTI", "NDWI"]);
   const [active, setActive] = useState(area?.active ?? true);
   const [notify, setNotify] = useState("email");
   const [recipients, setRecipients] = useState("");
   const [passes, setPasses] = useState(2);
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   useEffect(() => {
     if (open) {
       setName(area?.name ?? "");
-      setBbox(area?.bbox ?? { west: 23.52, south: 42.40, east: 23.65, north: 42.52 });
+      setBbox(getGeometryBounds(area ?? {}) ?? DEFAULT_BBOX);
       setIndices((area?.indices as Idx[]) ?? ["NDCI", "NDTI", "NDWI"]);
       setActive(area?.active ?? true);
+      setSaveError(null);
+      setSaving(false);
     }
   }, [open, area]);
 
@@ -53,9 +60,12 @@ export function AreaDrawer({
   const toggleIndex = (i: Idx) =>
     setIndices((prev) => (prev.includes(i) ? prev.filter((x) => x !== i) : [...prev, i]));
 
-  const submit = () => {
-    if (!valid) return;
-    onSave({
+  const submit = async () => {
+    if (!valid || saving) return;
+    setSaving(true);
+    setSaveError(null);
+
+    const nextArea: Area = {
       id: area?.id ?? `area-${Date.now()}`,
       name: name.trim(),
       bbox,
@@ -64,8 +74,16 @@ export function AreaDrawer({
       nextPass: area?.nextPass ?? "—",
       activeAlerts: area?.activeAlerts ?? 0,
       indices,
-    });
-    onOpenChange(false);
+    };
+
+    try {
+      await onSave(nextArea);
+      onOpenChange(false);
+    } catch {
+      setSaveError("Could not save this area. Please try again.");
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -84,6 +102,12 @@ export function AreaDrawer({
           <Field label="Area name">
             <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Язовир Искър, Black Sea Coast — Varna" />
           </Field>
+
+          {saveError && (
+            <div className="rounded-md border px-3 py-2" style={{ color: "var(--severity-critical)", fontSize: 13 }}>
+              {saveError}
+            </div>
+          )}
 
           <div>
             <Label>Bounding box (decimal degrees)</Label>
@@ -181,7 +205,9 @@ export function AreaDrawer({
           ) : <span />}
           <div className="flex gap-2">
             <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
-            <Button onClick={submit} disabled={!valid}>Save area</Button>
+            <Button onClick={submit} disabled={!valid || saving}>
+              {saving ? "Saving..." : "Save area"}
+            </Button>
           </div>
         </SheetFooter>
       </SheetContent>

@@ -4,6 +4,7 @@ import { Switch } from "../components/ui/switch"
 import { BBoxMap } from "../components/BBoxMap"
 import { Skeleton } from "../components/ui/skeleton"
 import type { Area } from "../lib/data"
+import { formatGeometryBounds } from "../lib/geometry"
 
 function AreaCardSkeleton() {
   return (
@@ -112,8 +113,7 @@ export function Areas({
                         fontFamily: "ui-monospace, monospace",
                       }}
                     >
-                      W {a.bbox.west} · S {a.bbox.south} · E {a.bbox.east} · N{" "}
-                      {a.bbox.north}
+                      {formatGeometryBounds(a)}
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
@@ -135,7 +135,7 @@ export function Areas({
                   style={{ borderRadius: 8, overflow: "hidden" }}
                   aria-label={`Open detailed view for ${a.name}`}
                 >
-                  <BBoxMap bbox={a.bbox} height={130} />
+                  <BBoxMap bbox={a.bbox} polygon={a.polygon} height={130} />
                   <div
                     className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
                     style={{ background: "rgba(24, 95, 165, 0.18)" }}

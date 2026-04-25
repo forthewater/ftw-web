@@ -1,71 +1,36 @@
-import { useState, useMemo } from "react"
+import { useEffect, useRef, useState } from "react"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
+import L from "leaflet"
+import "leaflet/dist/leaflet.css"
 import { X, MapPin, Layers, Pencil, Activity } from "lucide-react"
 import { Button } from "./ui/button"
 import { SeverityBadge, type Severity } from "./SeverityBadge"
 import { MetricCard } from "./MetricCard"
 import { TrendChart } from "./TrendChart"
-import type { Area, Alert } from "../lib/data"
+import type { Area, Alert, Pin } from "../lib/data"
 import { trendNDCI } from "../lib/data"
+import { usePins } from "../lib/hooks/usePins"
+import { formatGeometryBounds, geometryKey, getGeometryBounds } from "../lib/geometry"
 
-// ── Types ─────────────────────────────────────────────────────────────────────
+// ── Constants ─────────────────────────────────────────────────────────────────
 
-type Pin = {
-  id: string
-  name: string
-  lon: number
-  lat: number
-  ndci: number
-  ndti: number
-  ndwi: number
-  severity: Severity
-  lastReading: string
+const BBOX_COLOR = "#185fa5"
+
+// Light-mode severity colours (always used — OSM base map is always light)
+const SEV_COLOR: Record<Severity, string> = {
+  critical: "#A32D2D",
+  warning: "#854F0B",
+  ok: "#3B6D11",
+  info: "#185FA5",
 }
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
-
-function generatePins(area: Area): Pin[] {
-  const { west, south, east, north } = area.bbox
-  const seed = area.id.charCodeAt(0) + area.id.length * 17
-  const rand = (n: number) => {
-    const x = Math.sin(seed + n) * 10000
-    return x - Math.floor(x)
-  }
-  const stations = [
-    {
-      name: "North inlet",
-      sev: "warning" as Severity,
-      ndci: 0.18,
-      ndti: -0.04,
-    },
-    {
-      name: "Central basin",
-      sev: "critical" as Severity,
-      ndci: 0.21,
-      ndti: -0.06,
-    },
-    { name: "Dam outflow", sev: "ok" as Severity, ndci: 0.05, ndti: -0.08 },
-    { name: "South cove", sev: "warning" as Severity, ndci: 0.13, ndti: -0.05 },
-    { name: "East shore", sev: "ok" as Severity, ndci: 0.07, ndti: -0.07 },
-  ]
-  return stations.map((s, i) => ({
-    id: `${area.id}-pin-${i}`,
-    name: s.name,
-    lon: west + (east - west) * (0.15 + rand(i * 2) * 0.7),
-    lat: south + (north - south) * (0.15 + rand(i * 2 + 1) * 0.7),
-    ndci: s.ndci,
-    ndti: s.ndti,
-    ndwi: 0.66 + (rand(i + 5) - 0.5) * 0.04,
-    severity: s.sev,
-    lastReading: area.lastPass,
-  }))
-}
-
-const sevColor: Record<Severity, string> = {
-  critical: "var(--severity-critical)",
-  warning: "var(--severity-warning)",
-  ok: "var(--severity-ok)",
-  info: "var(--severity-info)",
+// NDCI heatmap colour scale matching the legend
+function ndciColor(ndci: number): string {
+  if (ndci > 0.2) return "#A32D2D"
+  if (ndci > 0.1) return "#f0c14a"
+  if (ndci > 0.05) return "#c8b942"
+  if (ndci >= 0) return "#2c6e7d"
+  return "#1f4a72"
 }
 
 // ── Main component ────────────────────────────────────────────────────────────
@@ -83,7 +48,7 @@ export function AreaDetailDialog({
   onOpenChange: (b: boolean) => void
   onEdit?: (a: Area) => void
 }) {
-  const pins = useMemo(() => (area ? generatePins(area) : []), [area])
+  const { pins } = usePins(area?.id ?? "")
   const [selected, setSelected] = useState<string | null>(null)
   const [overlay, setOverlay] = useState<"none" | "ndci">("ndci")
 
@@ -135,8 +100,7 @@ export function AreaDetailDialog({
                     fontFamily: "ui-monospace, monospace",
                   }}
                 >
-                  W {area.bbox.west} · S {area.bbox.south} · E {area.bbox.east}{" "}
-                  · N {area.bbox.north}
+                  {formatGeometryBounds(area)}
                 </div>
               </div>
             </div>
@@ -160,15 +124,17 @@ export function AreaDetailDialog({
           </header>
 
           <div className="flex-1 min-h-0 flex flex-col lg:flex-row">
-            <div className="relative flex-1 min-h-[320px] lg:min-h-0 bg-secondary">
+            <div className="relative flex-1 min-h-[320px] lg:min-h-0" style={{ isolation: "isolate" }}>
               <MapCanvas
-                bbox={area.bbox}
+                area={area}
                 pins={pins}
                 selectedId={selected}
                 onSelect={setSelected}
                 overlay={overlay}
               />
-              <div className="absolute top-3 left-3 flex flex-col gap-2">
+
+              {/* Overlay toggle */}
+              <div className="absolute top-3 left-3 z-[1000] flex flex-col gap-2">
                 <div
                   className="bg-card border flex"
                   style={{ borderRadius: 8, padding: 4, gap: 2 }}
@@ -187,8 +153,10 @@ export function AreaDetailDialog({
                   </ToggleBtn>
                 </div>
               </div>
+
+              {/* NDCI legend */}
               <div
-                className="absolute bottom-3 left-3 bg-card border"
+                className="absolute bottom-8 left-3 z-[1000] bg-card border"
                 style={{ borderRadius: 8, padding: "8px 10px", fontSize: 11 }}
               >
                 <div style={{ fontWeight: 500, marginBottom: 4 }}>
@@ -219,8 +187,10 @@ export function AreaDetailDialog({
                   ))}
                 </div>
               </div>
+
+              {/* Station count badge */}
               <div
-                className="absolute bottom-3 right-3 bg-card border"
+                className="absolute bottom-8 right-3 z-[1000] bg-card border"
                 style={{
                   borderRadius: 8,
                   padding: "6px 10px",
@@ -251,163 +221,176 @@ export function AreaDetailDialog({
   )
 }
 
-// ── MapCanvas ────────────────────────────────────────────────────────────────
+// ── MapCanvas ─────────────────────────────────────────────────────────────────
 
 function MapCanvas({
-  bbox,
+  area,
   pins,
   selectedId,
   onSelect,
   overlay,
 }: {
-  bbox: Area["bbox"]
+  area: Area
   pins: Pin[]
   selectedId: string | null
   onSelect: (id: string) => void
   overlay: "none" | "ndci"
 }) {
-  const { west, south, east, north } = bbox
-  const w = east - west
-  const h = north - south
-  const pad = 0.12
-  const padX = w * pad
-  const padY = h * pad
-  const vbW = w + padX * 2
-  const vbH = h + padY * 2
-  const vbX = west - padX
-  const vbY = -(north + padY)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const mapRef = useRef<L.Map | null>(null)
+  const markersRef = useRef<Map<string, L.CircleMarker>>(new Map())
+  const haloLayersRef = useRef<L.Circle[]>([])
+  const onSelectRef = useRef(onSelect)
+  const key = geometryKey(area)
 
-  const projX = (lon: number) => lon
-  const projY = (lat: number) => -lat
+  // Keep onSelect ref fresh without triggering map reinit
+  useEffect(() => {
+    onSelectRef.current = onSelect
+  })
+
+  // Initialise map when area (bbox) or pins change
+  useEffect(() => {
+    if (!containerRef.current) return
+    const geometryBounds = getGeometryBounds(area)
+    if (!geometryBounds) return
+
+    if (mapRef.current) {
+      mapRef.current.remove()
+      mapRef.current = null
+    }
+    markersRef.current.clear()
+    haloLayersRef.current = []
+
+    const bounds: L.LatLngBoundsExpression = [
+      [geometryBounds.south, geometryBounds.west],
+      [geometryBounds.north, geometryBounds.east],
+    ]
+
+    const map = L.map(containerRef.current, {
+      zoomControl: true,
+      scrollWheelZoom: true,
+      attributionControl: true,
+    })
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      maxZoom: 19,
+    }).addTo(map)
+
+    if (area.polygon?.length && area.polygon.length >= 3) {
+      L.polygon(
+        area.polygon.map((point) => [point.lat, point.lon]),
+        {
+          color: BBOX_COLOR,
+          weight: 2,
+          dashArray: "6 4",
+          fillOpacity: 0,
+        },
+      ).addTo(map)
+    } else {
+      L.rectangle(bounds, {
+        color: BBOX_COLOR,
+        weight: 2,
+        dashArray: "6 4",
+        fillOpacity: 0,
+      }).addTo(map)
+    }
+
+    // Pin markers
+    pins.forEach((pin) => {
+      const color = SEV_COLOR[pin.severity]
+      const marker = L.circleMarker([pin.lat, pin.lon], {
+        radius: 8,
+        fillColor: color,
+        color: "#fff",
+        weight: 2,
+        fillOpacity: 1,
+        bubblingMouseEvents: false,
+      }).addTo(map)
+
+      marker.on("click", () => onSelectRef.current(pin.id))
+      marker.bindTooltip(pin.name, { direction: "top", offset: [0, -10] })
+      markersRef.current.set(pin.id, marker)
+    })
+
+    map.fitBounds(bounds, { padding: [40, 40] })
+
+    const ro = new ResizeObserver(() => map.invalidateSize())
+    ro.observe(containerRef.current)
+
+    mapRef.current = map
+
+    return () => {
+      ro.disconnect()
+      map.remove()
+      mapRef.current = null
+      markersRef.current.clear()
+      haloLayersRef.current = []
+    }
+  }, [key, pins])
+
+  // Update marker appearance when selection changes
+  useEffect(() => {
+    markersRef.current.forEach((marker, id) => {
+      const pin = pins.find((p) => p.id === id)
+      if (!pin) return
+      const isSel = id === selectedId
+      marker.setRadius(isSel ? 13 : 8)
+      marker.setStyle({
+        weight: isSel ? 3 : 2,
+        color: isSel ? SEV_COLOR[pin.severity] : "#fff",
+      })
+    })
+  }, [selectedId, pins])
+
+  // Add / remove NDCI halo circles when overlay toggles
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map) return
+    const geometryBounds = getGeometryBounds(area)
+    if (!geometryBounds) return
+
+    // Remove existing halos
+    haloLayersRef.current.forEach((c) => c.remove())
+    haloLayersRef.current = []
+
+    if (overlay !== "ndci") return
+
+    // Estimate a radius in metres: ~20% of the shorter bbox dimension
+    const latSpan = Math.abs(geometryBounds.north - geometryBounds.south) * 111_320
+    const lonSpan =
+      Math.abs(geometryBounds.east - geometryBounds.west) *
+      111_320 *
+      Math.cos(((geometryBounds.north + geometryBounds.south) / 2) * (Math.PI / 180))
+    const haloRadius = Math.min(latSpan, lonSpan) * 0.22
+
+    pins.forEach((pin) => {
+      const halo = L.circle([pin.lat, pin.lon], {
+        radius: haloRadius,
+        color: "transparent",
+        fillColor: ndciColor(pin.ndci),
+        fillOpacity: 0.28,
+        interactive: false,
+      }).addTo(map)
+      haloLayersRef.current.push(halo)
+      // Ensure halos sit below markers
+      halo.bringToBack()
+    })
+  }, [overlay, pins, key])
+
+  const geometryBounds = getGeometryBounds(area)
 
   return (
-    <svg
-      viewBox={`${vbX} ${vbY} ${vbW} ${vbH}`}
-      width="100%"
-      height="100%"
-      preserveAspectRatio="xMidYMid slice"
-      style={{ display: "block" }}
-      role="img"
-      aria-label={`Map showing sampling stations for ${bbox.west}, ${bbox.south} to ${bbox.east}, ${bbox.north}`}
-    >
-      <defs>
-        <pattern
-          id="grid"
-          width={vbW / 12}
-          height={vbH / 12}
-          patternUnits="userSpaceOnUse"
-        >
-          <path
-            d={`M ${vbW / 12} 0 L 0 0 0 ${vbH / 12}`}
-            fill="none"
-            stroke="var(--border)"
-            strokeWidth={vbW * 0.001}
-          />
-        </pattern>
-        <radialGradient id="overlayGrad" cx="50%" cy="45%" r="55%">
-          <stop offset="0%" stopColor="#A32D2D" stopOpacity="0.55" />
-          <stop offset="35%" stopColor="#f0c14a" stopOpacity="0.45" />
-          <stop offset="65%" stopColor="#c8b942" stopOpacity="0.35" />
-          <stop offset="100%" stopColor="#2c6e7d" stopOpacity="0.25" />
-        </radialGradient>
-      </defs>
-
-      <rect x={vbX} y={vbY} width={vbW} height={vbH} fill="var(--secondary)" />
-      <rect x={vbX} y={vbY} width={vbW} height={vbH} fill="url(#grid)" />
-
-      {/* water body silhouette */}
-      <path
-        d={`
-          M ${west + w * 0.1}  ${-north + h * 0.25}
-          C ${west + w * 0.05} ${-north + h * 0.55},
-            ${west + w * 0.25} ${-north + h * 0.95},
-            ${west + w * 0.55} ${-north + h * 0.92}
-          C ${west + w * 0.85} ${-north + h * 0.88},
-            ${west + w * 1.0}  ${-north + h * 0.55},
-            ${west + w * 0.92} ${-north + h * 0.3}
-          C ${west + w * 0.78} ${-north + h * 0.05},
-            ${west + w * 0.35} ${-north + h * 0.05},
-            ${west + w * 0.1}  ${-north + h * 0.25} Z
-        `}
-        fill={overlay === "ndci" ? "url(#overlayGrad)" : "var(--accent)"}
-        stroke="var(--primary)"
-        strokeWidth={vbW * 0.002}
-        opacity={overlay === "ndci" ? 0.92 : 0.55}
-      />
-
-      {/* bbox rectangle */}
-      <rect
-        x={west}
-        y={-north}
-        width={w}
-        height={h}
-        fill="none"
-        stroke="var(--primary)"
-        strokeWidth={vbW * 0.0025}
-        strokeDasharray={`${vbW * 0.01} ${vbW * 0.005}`}
-      />
-
-      <CornerLabel
-        x={west}
-        y={-north}
-        text={`${west.toFixed(2)}, ${north.toFixed(2)}`}
-        dx={vbW * 0.005}
-        dy={-vbH * 0.01}
-      />
-      <CornerLabel
-        x={east}
-        y={-south}
-        text={`${east.toFixed(2)}, ${south.toFixed(2)}`}
-        dx={-vbW * 0.005}
-        dy={vbH * 0.025}
-        anchor="end"
-      />
-
-      {/* pins */}
-      {pins.map((p) => {
-        const isSel = p.id === selectedId
-        const r = vbW * (isSel ? 0.018 : 0.013)
-        return (
-          <g
-            key={p.id}
-            style={{ cursor: "pointer" }}
-            onClick={() => onSelect(p.id)}
-            role="button"
-            aria-label={`${p.name}: ${p.severity}`}
-            tabIndex={0}
-            onKeyDown={(e) =>
-              (e.key === "Enter" || e.key === " ") && onSelect(p.id)
-            }
-          >
-            <circle
-              cx={projX(p.lon)}
-              cy={projY(p.lat)}
-              r={r * 1.6}
-              fill={sevColor[p.severity]}
-              opacity={0.18}
-            />
-            <circle
-              cx={projX(p.lon)}
-              cy={projY(p.lat)}
-              r={r}
-              fill={sevColor[p.severity]}
-              stroke="#fff"
-              strokeWidth={vbW * 0.0025}
-            />
-            {isSel && (
-              <circle
-                cx={projX(p.lon)}
-                cy={projY(p.lat)}
-                r={r * 2.2}
-                fill="none"
-                stroke={sevColor[p.severity]}
-                strokeWidth={vbW * 0.0015}
-              />
-            )}
-          </g>
-        )
-      })}
-    </svg>
+    <div
+      ref={containerRef}
+      style={{ width: "100%", height: "100%" }}
+      aria-label={
+        geometryBounds
+          ? `Map of ${geometryBounds.west},${geometryBounds.south} – ${geometryBounds.east},${geometryBounds.north}`
+          : "Map"
+      }
+    />
   )
 }
 
@@ -422,8 +405,12 @@ function AreaSummary({
   pins: Pin[]
   alerts: Alert[]
 }) {
-  const avgNDCI = pins.reduce((s, p) => s + p.ndci, 0) / pins.length
-  const worst = pins.reduce((acc, p) => (p.ndci > acc.ndci ? p : acc), pins[0])
+  const avgNDCI = pins.length
+    ? pins.reduce((s, p) => s + p.ndci, 0) / pins.length
+    : 0
+  const worst = pins.length
+    ? pins.reduce((acc, p) => (p.ndci > acc.ndci ? p : acc), pins[0])
+    : null
   const sevCount = pins.reduce<Record<Severity, number>>(
     (acc, p) => ({ ...acc, [p.severity]: (acc[p.severity] ?? 0) + 1 }),
     { critical: 0, warning: 0, ok: 0, info: 0 },
@@ -458,14 +445,15 @@ function AreaSummary({
           trend="flat"
           trendLabel={`${alerts.length} total`}
         />
-        <MetricCard
-          label="Worst station"
-          value={worst.name}
-          trend="up"
-          trendLabel={`NDCI ${worst.ndci.toFixed(2)}`}
-          improving={false}
-        />
-        {/* <MetricCard label="Last pass" value={area.lastPass.replace(", 2026", "")} trend="flat" trendLabel={`Next: ${area.nextPass.replace(", 2026", "")}`} /> */}
+        {worst && (
+          <MetricCard
+            label="Worst station"
+            value={worst.name}
+            trend="up"
+            trendLabel={`NDCI ${worst.ndci.toFixed(2)}`}
+            improving={false}
+          />
+        )}
       </div>
 
       <div className="border" style={{ borderRadius: 8, padding: 12 }}>
@@ -477,14 +465,14 @@ function AreaSummary({
           <StatusRow
             label="Critical"
             count={sevCount.critical}
-            color={sevColor.critical}
+            color={SEV_COLOR.critical}
           />
           <StatusRow
             label="Warning"
             count={sevCount.warning}
-            color={sevColor.warning}
+            color={SEV_COLOR.warning}
           />
-          <StatusRow label="OK" count={sevCount.ok} color={sevColor.ok} />
+          <StatusRow label="OK" count={sevCount.ok} color={SEV_COLOR.ok} />
         </div>
       </div>
 
@@ -618,36 +606,6 @@ function PinDetail({ pin, onClear }: { pin: Pin; onClear: () => void }) {
 }
 
 // ── Shared helpers ────────────────────────────────────────────────────────────
-
-function CornerLabel({
-  x,
-  y,
-  text,
-  dx,
-  dy,
-  anchor = "start",
-}: {
-  x: number
-  y: number
-  text: string
-  dx: number
-  dy: number
-  anchor?: "start" | "end"
-}) {
-  return (
-    <text
-      x={x + dx}
-      y={y + dy}
-      fontSize={0.012}
-      fontFamily="ui-monospace, monospace"
-      fill="var(--muted-foreground)"
-      textAnchor={anchor}
-      style={{ fontSize: "0.012em" }}
-    >
-      <tspan style={{ fontSize: "10px" }}>{text}</tspan>
-    </text>
-  )
-}
 
 function ToggleBtn({
   active,

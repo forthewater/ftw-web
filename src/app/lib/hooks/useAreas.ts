@@ -33,13 +33,25 @@ export function useAreas() {
   useEffect(() => { fetchAreas(); }, [fetchAreas]);
 
   const addArea = useCallback(async (area: Area) => {
+    if (hasApi) {
+      const { data } = await api.post<Area>("/areas", area);
+      setAreas((prev) => [...prev, data]);
+      return data;
+    }
+
     setAreas((prev) => [...prev, area]);
-    // await api.post("/areas", area);
+    return area;
   }, []);
 
   const editArea = useCallback(async (area: Area) => {
+    if (hasApi) {
+      const { data } = await api.put<Area>(`/areas/${area.id}`, area);
+      setAreas((prev) => prev.map((a) => (a.id === data.id ? data : a)));
+      return data;
+    }
+
     setAreas((prev) => prev.map((a) => (a.id === area.id ? area : a)));
-    // await api.put(`/areas/${area.id}`, area);
+    return area;
   }, []);
 
   const deleteArea = useCallback(async (id: string) => {

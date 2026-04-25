@@ -9,6 +9,7 @@ import type { Area } from "../lib/data"
 import { useAreas } from "../lib/hooks/useAreas"
 import { useTrend } from "../lib/hooks/useTrend"
 import { AreaSelector } from "../components/AreaSelector"
+import { formatGeometryBounds } from "../lib/geometry"
 
 export function Historical({
   initialArea,
@@ -51,8 +52,7 @@ export function Historical({
               fontFamily: "ui-monospace, monospace",
             }}
           >
-            {area.bbox.south}–{area.bbox.north}N, {area.bbox.west}–
-            {area.bbox.east}E
+            {formatGeometryBounds(area)}
           </div>
         </div>
         <AreaSelector areas={allAreas} value={areaId} onChange={handleAreaChange} />
@@ -140,8 +140,9 @@ export function Historical({
         </div>
         <BBoxMap
           bbox={area.bbox}
+          polygon={area.polygon}
           height={260}
-          caption="Leaflet.js interactive map renders here in production."
+          interactive
         />
       </div>
 

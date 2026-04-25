@@ -2,43 +2,1381 @@
   "areas": [
     {
       "id": "iskar",
-      "name": "Язовир Искър",
-      "bbox": { "west": 23.52, "south": 42.40, "east": 23.65, "north": 42.52 },
+      "name": "Панчаревско езеро",
+      "polygon": [
+        {
+          "lat": 42.5880169,
+          "lon": 23.4243249
+        },
+        {
+          "lat": 42.588404,
+          "lon": 23.4238873
+        },
+        {
+          "lat": 42.5886897,
+          "lon": 23.4234302
+        },
+        {
+          "lat": 42.5887276,
+          "lon": 23.4231127
+        },
+        {
+          "lat": 42.5886644,
+          "lon": 23.4226149
+        },
+        {
+          "lat": 42.5884605,
+          "lon": 23.4215342
+        },
+        {
+          "lat": 42.5884243,
+          "lon": 23.4212845
+        },
+        {
+          "lat": 42.5884432,
+          "lon": 23.4210433
+        },
+        {
+          "lat": 42.5887718,
+          "lon": 23.4209669
+        },
+        {
+          "lat": 42.5889117,
+          "lon": 23.420857
+        },
+        {
+          "lat": 42.5889406,
+          "lon": 23.4207045
+        },
+        {
+          "lat": 42.5888972,
+          "lon": 23.4204493
+        },
+        {
+          "lat": 42.5889693,
+          "lon": 23.4202516
+        },
+        {
+          "lat": 42.589132,
+          "lon": 23.4201429
+        },
+        {
+          "lat": 42.5898851,
+          "lon": 23.4193793
+        },
+        {
+          "lat": 42.5901892,
+          "lon": 23.4190591
+        },
+        {
+          "lat": 42.5906724,
+          "lon": 23.4186255
+        },
+        {
+          "lat": 42.5914097,
+          "lon": 23.4182764
+        },
+        {
+          "lat": 42.5920715,
+          "lon": 23.4180287
+        },
+        {
+          "lat": 42.592271,
+          "lon": 23.4180313
+        },
+        {
+          "lat": 42.5924798,
+          "lon": 23.4179159
+        },
+        {
+          "lat": 42.5928791,
+          "lon": 23.4174221
+        },
+        {
+          "lat": 42.5932772,
+          "lon": 23.4169329
+        },
+        {
+          "lat": 42.5935212,
+          "lon": 23.4165597
+        },
+        {
+          "lat": 42.5937448,
+          "lon": 23.4161776
+        },
+        {
+          "lat": 42.594069,
+          "lon": 23.4158756
+        },
+        {
+          "lat": 42.5943445,
+          "lon": 23.4157824
+        },
+        {
+          "lat": 42.594476,
+          "lon": 23.4158485
+        },
+        {
+          "lat": 42.5947526,
+          "lon": 23.4160032
+        },
+        {
+          "lat": 42.5950858,
+          "lon": 23.416211
+        },
+        {
+          "lat": 42.5951059,
+          "lon": 23.4162858
+        },
+        {
+          "lat": 42.595161,
+          "lon": 23.4163325
+        },
+        {
+          "lat": 42.5952206,
+          "lon": 23.4163149
+        },
+        {
+          "lat": 42.5952681,
+          "lon": 23.4162373
+        },
+        {
+          "lat": 42.5953271,
+          "lon": 23.4162586
+        },
+        {
+          "lat": 42.5954755,
+          "lon": 23.4162068
+        },
+        {
+          "lat": 42.5956884,
+          "lon": 23.4160362
+        },
+        {
+          "lat": 42.5958163,
+          "lon": 23.4158101
+        },
+        {
+          "lat": 42.5958804,
+          "lon": 23.4155338
+        },
+        {
+          "lat": 42.59607,
+          "lon": 23.4156454
+        },
+        {
+          "lat": 42.596214,
+          "lon": 23.4155957
+        },
+        {
+          "lat": 42.5962727,
+          "lon": 23.415436
+        },
+        {
+          "lat": 42.5962182,
+          "lon": 23.415273
+        },
+        {
+          "lat": 42.5961822,
+          "lon": 23.4151534
+        },
+        {
+          "lat": 42.5962154,
+          "lon": 23.415068
+        },
+        {
+          "lat": 42.596328,
+          "lon": 23.4151367
+        },
+        {
+          "lat": 42.5964742,
+          "lon": 23.4154132
+        },
+        {
+          "lat": 42.5965607,
+          "lon": 23.4156001
+        },
+        {
+          "lat": 42.5965733,
+          "lon": 23.4158406
+        },
+        {
+          "lat": 42.5966408,
+          "lon": 23.415965
+        },
+        {
+          "lat": 42.5966737,
+          "lon": 23.4158884
+        },
+        {
+          "lat": 42.596771,
+          "lon": 23.4155652
+        },
+        {
+          "lat": 42.5968682,
+          "lon": 23.4153798
+        },
+        {
+          "lat": 42.5968238,
+          "lon": 23.4152555
+        },
+        {
+          "lat": 42.596742,
+          "lon": 23.4151666
+        },
+        {
+          "lat": 42.5965637,
+          "lon": 23.4149229
+        },
+        {
+          "lat": 42.5965134,
+          "lon": 23.414747
+        },
+        {
+          "lat": 42.596561,
+          "lon": 23.4146843
+        },
+        {
+          "lat": 42.5966495,
+          "lon": 23.414399
+        },
+        {
+          "lat": 42.5966917,
+          "lon": 23.4140912
+        },
+        {
+          "lat": 42.5966994,
+          "lon": 23.4136374
+        },
+        {
+          "lat": 42.5967839,
+          "lon": 23.4132765
+        },
+        {
+          "lat": 42.5967856,
+          "lon": 23.4130521
+        },
+        {
+          "lat": 42.5967553,
+          "lon": 23.4127354
+        },
+        {
+          "lat": 42.5967133,
+          "lon": 23.4124124
+        },
+        {
+          "lat": 42.5968905,
+          "lon": 23.412236
+        },
+        {
+          "lat": 42.5968355,
+          "lon": 23.4121177
+        },
+        {
+          "lat": 42.5969292,
+          "lon": 23.4119913
+        },
+        {
+          "lat": 42.5969795,
+          "lon": 23.4117612
+        },
+        {
+          "lat": 42.5969343,
+          "lon": 23.4115351
+        },
+        {
+          "lat": 42.5968666,
+          "lon": 23.4111424
+        },
+        {
+          "lat": 42.5970571,
+          "lon": 23.4112081
+        },
+        {
+          "lat": 42.5971341,
+          "lon": 23.4109305
+        },
+        {
+          "lat": 42.596972,
+          "lon": 23.4107876
+        },
+        {
+          "lat": 42.5970364,
+          "lon": 23.4105845
+        },
+        {
+          "lat": 42.5971745,
+          "lon": 23.4101065
+        },
+        {
+          "lat": 42.5972319,
+          "lon": 23.4101372
+        },
+        {
+          "lat": 42.5974468,
+          "lon": 23.409453
+        },
+        {
+          "lat": 42.5973896,
+          "lon": 23.4094153
+        },
+        {
+          "lat": 42.5974396,
+          "lon": 23.4092414
+        },
+        {
+          "lat": 42.5973722,
+          "lon": 23.4091947
+        },
+        {
+          "lat": 42.5975237,
+          "lon": 23.4087448
+        },
+        {
+          "lat": 42.5975317,
+          "lon": 23.4085328
+        },
+        {
+          "lat": 42.5973817,
+          "lon": 23.408128
+        },
+        {
+          "lat": 42.5973842,
+          "lon": 23.4078434
+        },
+        {
+          "lat": 42.59746,
+          "lon": 23.4074829
+        },
+        {
+          "lat": 42.5976317,
+          "lon": 23.4070581
+        },
+        {
+          "lat": 42.5978138,
+          "lon": 23.4068392
+        },
+        {
+          "lat": 42.5983193,
+          "lon": 23.4061525
+        },
+        {
+          "lat": 42.598711,
+          "lon": 23.4057234
+        },
+        {
+          "lat": 42.5989132,
+          "lon": 23.4052942
+        },
+        {
+          "lat": 42.5993933,
+          "lon": 23.4046505
+        },
+        {
+          "lat": 42.5995569,
+          "lon": 23.4043704
+        },
+        {
+          "lat": 42.5997501,
+          "lon": 23.4042149
+        },
+        {
+          "lat": 42.5998115,
+          "lon": 23.4041778
+        },
+        {
+          "lat": 42.5998081,
+          "lon": 23.4041605
+        },
+        {
+          "lat": 42.5998582,
+          "lon": 23.403944
+        },
+        {
+          "lat": 42.5998287,
+          "lon": 23.4039097
+        },
+        {
+          "lat": 42.5997041,
+          "lon": 23.4039688
+        },
+        {
+          "lat": 42.5996491,
+          "lon": 23.4039099
+        },
+        {
+          "lat": 42.5996174,
+          "lon": 23.4037553
+        },
+        {
+          "lat": 42.599626,
+          "lon": 23.4035875
+        },
+        {
+          "lat": 42.5996493,
+          "lon": 23.4034601
+        },
+        {
+          "lat": 42.5997042,
+          "lon": 23.4033632
+        },
+        {
+          "lat": 42.5997323,
+          "lon": 23.4033349
+        },
+        {
+          "lat": 42.5997653,
+          "lon": 23.4032915
+        },
+        {
+          "lat": 42.599799,
+          "lon": 23.403354
+        },
+        {
+          "lat": 42.5998384,
+          "lon": 23.4034031
+        },
+        {
+          "lat": 42.5999083,
+          "lon": 23.4035654
+        },
+        {
+          "lat": 42.5999968,
+          "lon": 23.4037904
+        },
+        {
+          "lat": 42.5999784,
+          "lon": 23.4038811
+        },
+        {
+          "lat": 42.6000243,
+          "lon": 23.4040473
+        },
+        {
+          "lat": 42.6000283,
+          "lon": 23.4040635
+        },
+        {
+          "lat": 42.6002295,
+          "lon": 23.4039664
+        },
+        {
+          "lat": 42.6002705,
+          "lon": 23.4040735
+        },
+        {
+          "lat": 42.600528,
+          "lon": 23.4039328
+        },
+        {
+          "lat": 42.6005786,
+          "lon": 23.4038568
+        },
+        {
+          "lat": 42.6006662,
+          "lon": 23.4038154
+        },
+        {
+          "lat": 42.6010802,
+          "lon": 23.403775
+        },
+        {
+          "lat": 42.6017206,
+          "lon": 23.4036139
+        },
+        {
+          "lat": 42.6018036,
+          "lon": 23.4036201
+        },
+        {
+          "lat": 42.6018811,
+          "lon": 23.4036466
+        },
+        {
+          "lat": 42.6019167,
+          "lon": 23.4036662
+        },
+        {
+          "lat": 42.6019473,
+          "lon": 23.403705
+        },
+        {
+          "lat": 42.6019398,
+          "lon": 23.4037656
+        },
+        {
+          "lat": 42.601975,
+          "lon": 23.4037819
+        },
+        {
+          "lat": 42.6020307,
+          "lon": 23.4037547
+        },
+        {
+          "lat": 42.6020775,
+          "lon": 23.4037716
+        },
+        {
+          "lat": 42.6021335,
+          "lon": 23.4037452
+        },
+        {
+          "lat": 42.6021799,
+          "lon": 23.4037534
+        },
+        {
+          "lat": 42.6021849,
+          "lon": 23.4037863
+        },
+        {
+          "lat": 42.6021927,
+          "lon": 23.4038367
+        },
+        {
+          "lat": 42.6021957,
+          "lon": 23.4040228
+        },
+        {
+          "lat": 42.6024921,
+          "lon": 23.4042098
+        },
+        {
+          "lat": 42.6025482,
+          "lon": 23.4041783
+        },
+        {
+          "lat": 42.6027204,
+          "lon": 23.4042368
+        },
+        {
+          "lat": 42.6026638,
+          "lon": 23.4043957
+        },
+        {
+          "lat": 42.6026706,
+          "lon": 23.4044693
+        },
+        {
+          "lat": 42.6026969,
+          "lon": 23.404507
+        },
+        {
+          "lat": 42.6027424,
+          "lon": 23.4045202
+        },
+        {
+          "lat": 42.6027896,
+          "lon": 23.4044947
+        },
+        {
+          "lat": 42.602817,
+          "lon": 23.4044268
+        },
+        {
+          "lat": 42.6028217,
+          "lon": 23.404267
+        },
+        {
+          "lat": 42.6029161,
+          "lon": 23.404229
+        },
+        {
+          "lat": 42.602974,
+          "lon": 23.4041408
+        },
+        {
+          "lat": 42.6030021,
+          "lon": 23.4040519
+        },
+        {
+          "lat": 42.6030009,
+          "lon": 23.4038131
+        },
+        {
+          "lat": 42.6030382,
+          "lon": 23.4035083
+        },
+        {
+          "lat": 42.6031477,
+          "lon": 23.4031612
+        },
+        {
+          "lat": 42.6033357,
+          "lon": 23.4028309
+        },
+        {
+          "lat": 42.6037056,
+          "lon": 23.4025136
+        },
+        {
+          "lat": 42.6040758,
+          "lon": 23.4023853
+        },
+        {
+          "lat": 42.6041822,
+          "lon": 23.4023829
+        },
+        {
+          "lat": 42.6042939,
+          "lon": 23.4023668
+        },
+        {
+          "lat": 42.6044216,
+          "lon": 23.402309
+        },
+        {
+          "lat": 42.6044965,
+          "lon": 23.4024453
+        },
+        {
+          "lat": 42.6044708,
+          "lon": 23.402503
+        },
+        {
+          "lat": 42.6044863,
+          "lon": 23.4025476
+        },
+        {
+          "lat": 42.6044607,
+          "lon": 23.4025882
+        },
+        {
+          "lat": 42.6041631,
+          "lon": 23.4030597
+        },
+        {
+          "lat": 42.6039288,
+          "lon": 23.4032531
+        },
+        {
+          "lat": 42.6038899,
+          "lon": 23.403358
+        },
+        {
+          "lat": 42.6038225,
+          "lon": 23.4034626
+        },
+        {
+          "lat": 42.6037917,
+          "lon": 23.4035408
+        },
+        {
+          "lat": 42.6049959,
+          "lon": 23.4064456
+        },
+        {
+          "lat": 42.6050489,
+          "lon": 23.4066402
+        },
+        {
+          "lat": 42.6050656,
+          "lon": 23.4067836
+        },
+        {
+          "lat": 42.6049413,
+          "lon": 23.4070865
+        },
+        {
+          "lat": 42.6048014,
+          "lon": 23.4071229
+        },
+        {
+          "lat": 42.604709,
+          "lon": 23.4072894
+        },
+        {
+          "lat": 42.6043972,
+          "lon": 23.407607
+        },
+        {
+          "lat": 42.6043201,
+          "lon": 23.4077946
+        },
+        {
+          "lat": 42.6042323,
+          "lon": 23.4078933
+        },
+        {
+          "lat": 42.6040039,
+          "lon": 23.4080127
+        },
+        {
+          "lat": 42.6033041,
+          "lon": 23.4085558
+        },
+        {
+          "lat": 42.6030703,
+          "lon": 23.4086674
+        },
+        {
+          "lat": 42.6028303,
+          "lon": 23.4089249
+        },
+        {
+          "lat": 42.6023996,
+          "lon": 23.4089984
+        },
+        {
+          "lat": 42.6021227,
+          "lon": 23.4090536
+        },
+        {
+          "lat": 42.6018158,
+          "lon": 23.4090713
+        },
+        {
+          "lat": 42.6012823,
+          "lon": 23.4092323
+        },
+        {
+          "lat": 42.6009042,
+          "lon": 23.4097894
+        },
+        {
+          "lat": 42.6008081,
+          "lon": 23.4100697
+        },
+        {
+          "lat": 42.6008205,
+          "lon": 23.4103524
+        },
+        {
+          "lat": 42.6006815,
+          "lon": 23.4109331
+        },
+        {
+          "lat": 42.6005629,
+          "lon": 23.4112718
+        },
+        {
+          "lat": 42.6002371,
+          "lon": 23.411547
+        },
+        {
+          "lat": 42.5997259,
+          "lon": 23.412134
+        },
+        {
+          "lat": 42.5992714,
+          "lon": 23.4127194
+        },
+        {
+          "lat": 42.5986835,
+          "lon": 23.4136814
+        },
+        {
+          "lat": 42.5986233,
+          "lon": 23.4139096
+        },
+        {
+          "lat": 42.5983105,
+          "lon": 23.4145616
+        },
+        {
+          "lat": 42.5979601,
+          "lon": 23.4153273
+        },
+        {
+          "lat": 42.5977697,
+          "lon": 23.4158285
+        },
+        {
+          "lat": 42.5974885,
+          "lon": 23.4162193
+        },
+        {
+          "lat": 42.5972109,
+          "lon": 23.4166487
+        },
+        {
+          "lat": 42.597008,
+          "lon": 23.4170662
+        },
+        {
+          "lat": 42.5967015,
+          "lon": 23.4172635
+        },
+        {
+          "lat": 42.5964837,
+          "lon": 23.4176134
+        },
+        {
+          "lat": 42.5964067,
+          "lon": 23.4178558
+        },
+        {
+          "lat": 42.5963481,
+          "lon": 23.4181211
+        },
+        {
+          "lat": 42.5961942,
+          "lon": 23.4183775
+        },
+        {
+          "lat": 42.5959062,
+          "lon": 23.4186637
+        },
+        {
+          "lat": 42.595754,
+          "lon": 23.4190007
+        },
+        {
+          "lat": 42.5955469,
+          "lon": 23.4194623
+        },
+        {
+          "lat": 42.5952998,
+          "lon": 23.4200264
+        },
+        {
+          "lat": 42.5950807,
+          "lon": 23.4203314
+        },
+        {
+          "lat": 42.5949308,
+          "lon": 23.4203013
+        },
+        {
+          "lat": 42.594637,
+          "lon": 23.4206314
+        },
+        {
+          "lat": 42.5944467,
+          "lon": 23.4207688
+        },
+        {
+          "lat": 42.5943996,
+          "lon": 23.4211972
+        },
+        {
+          "lat": 42.5942057,
+          "lon": 23.4214087
+        },
+        {
+          "lat": 42.593975,
+          "lon": 23.4216679
+        },
+        {
+          "lat": 42.5937532,
+          "lon": 23.4217371
+        },
+        {
+          "lat": 42.5935968,
+          "lon": 23.4219647
+        },
+        {
+          "lat": 42.5935043,
+          "lon": 23.4218349
+        },
+        {
+          "lat": 42.5932562,
+          "lon": 23.4219867
+        },
+        {
+          "lat": 42.5932245,
+          "lon": 23.4221234
+        },
+        {
+          "lat": 42.5930583,
+          "lon": 23.4222563
+        },
+        {
+          "lat": 42.5930055,
+          "lon": 23.4223402
+        },
+        {
+          "lat": 42.592797,
+          "lon": 23.4225719
+        },
+        {
+          "lat": 42.5926428,
+          "lon": 23.4226707
+        },
+        {
+          "lat": 42.5926428,
+          "lon": 23.4226707
+        },
+        {
+          "lat": 42.5921416,
+          "lon": 23.4230369
+        },
+        {
+          "lat": 42.5921416,
+          "lon": 23.4230369
+        },
+        {
+          "lat": 42.5920117,
+          "lon": 23.4232184
+        },
+        {
+          "lat": 42.5917417,
+          "lon": 23.4235161
+        },
+        {
+          "lat": 42.5914258,
+          "lon": 23.4237993
+        },
+        {
+          "lat": 42.5910827,
+          "lon": 23.4239992
+        },
+        {
+          "lat": 42.5906359,
+          "lon": 23.4242285
+        },
+        {
+          "lat": 42.5897513,
+          "lon": 23.4247606
+        },
+        {
+          "lat": 42.5893525,
+          "lon": 23.4248076
+        },
+        {
+          "lat": 42.5888168,
+          "lon": 23.4246212
+        },
+        {
+          "lat": 42.5885976,
+          "lon": 23.4247753
+        },
+        {
+          "lat": 42.5883948,
+          "lon": 23.4243736
+        },
+        {
+          "lat": 42.5881043,
+          "lon": 23.4245334
+        },
+        {
+          "lat": 42.5865242,
+          "lon": 23.4253874
+        },
+        {
+          "lat": 42.5864851,
+          "lon": 23.4254961
+        },
+        {
+          "lat": 42.5853876,
+          "lon": 23.4263825
+        },
+        {
+          "lat": 42.5850736,
+          "lon": 23.4266166
+        },
+        {
+          "lat": 42.5841313,
+          "lon": 23.4273555
+        },
+        {
+          "lat": 42.5838733,
+          "lon": 23.4275333
+        },
+        {
+          "lat": 42.5838003,
+          "lon": 23.4276678
+        },
+        {
+          "lat": 42.5837977,
+          "lon": 23.4279899
+        },
+        {
+          "lat": 42.584007,
+          "lon": 23.4280016
+        },
+        {
+          "lat": 42.5840293,
+          "lon": 23.4278326
+        },
+        {
+          "lat": 42.5841521,
+          "lon": 23.4276537
+        },
+        {
+          "lat": 42.5843263,
+          "lon": 23.4274938
+        },
+        {
+          "lat": 42.585369,
+          "lon": 23.4266991
+        },
+        {
+          "lat": 42.585578,
+          "lon": 23.4265008
+        },
+        {
+          "lat": 42.5859405,
+          "lon": 23.4262037
+        },
+        {
+          "lat": 42.5871615,
+          "lon": 23.4252931
+        },
+        {
+          "lat": 42.5881043,
+          "lon": 23.4245334
+        },
+        {
+          "lat": 42.5880169,
+          "lon": 23.4243249
+        },
+        {
+          "lat": 42.5873361,
+          "lon": 23.4248357
+        },
+        {
+          "lat": 42.5866626,
+          "lon": 23.4251812
+        },
+        {
+          "lat": 42.5857083,
+          "lon": 23.4253191
+        },
+        {
+          "lat": 42.5855183,
+          "lon": 23.4254269
+        },
+        {
+          "lat": 42.5857932,
+          "lon": 23.4254621
+        },
+        {
+          "lat": 42.5860288,
+          "lon": 23.4254661
+        },
+        {
+          "lat": 42.5863426,
+          "lon": 23.4253734
+        },
+        {
+          "lat": 42.5865242,
+          "lon": 23.4253874
+        }
+      ],
+      "warning": null,
       "active": true,
       "lastPass": "Apr 22, 2026",
       "nextPass": "Apr 27, 2026",
       "activeAlerts": 1,
-      "indices": ["NDCI", "NDTI", "NDWI"]
+      "indices": [
+        "NDCI",
+        "NDTI",
+        "NDWI"
+      ]
     },
     {
       "id": "varna",
       "name": "Black Sea Coast — Varna",
-      "bbox": { "west": 27.85, "south": 43.18, "east": 28.05, "north": 43.28 },
+      "bbox": {
+        "west": 27.85,
+        "south": 43.18,
+        "east": 28.05,
+        "north": 43.28
+      },
       "active": true,
       "lastPass": "Apr 21, 2026",
       "nextPass": "Apr 26, 2026",
       "activeAlerts": 1,
-      "indices": ["NDCI", "NDTI"]
+      "indices": [
+        "NDCI",
+        "NDTI"
+      ]
     },
     {
       "id": "batak",
       "name": "Язовир Батак",
-      "bbox": { "west": 24.10, "south": 41.92, "east": 24.28, "north": 42.04 },
+      "bbox": {
+        "west": 24.1,
+        "south": 41.92,
+        "east": 24.28,
+        "north": 42.04
+      },
       "active": true,
       "lastPass": "Apr 22, 2026",
       "nextPass": "Apr 27, 2026",
       "activeAlerts": 0,
-      "indices": ["NDCI", "NDWI"]
+      "indices": [
+        "NDCI",
+        "NDWI"
+      ]
     },
     {
       "id": "kardzhali",
       "name": "Язовир Кърджали",
-      "bbox": { "west": 25.30, "south": 41.58, "east": 25.48, "north": 41.70 },
+      "bbox": {
+        "west": 25.3,
+        "south": 41.58,
+        "east": 25.48,
+        "north": 41.7
+      },
       "active": false,
       "lastPass": "Mar 10, 2026",
       "nextPass": "Paused",
       "activeAlerts": 0,
-      "indices": ["NDCI"]
+      "indices": [
+        "NDCI"
+      ]
+    },
+    {
+      "id": "PA3U2u9wO7c",
+      "name": "Testingggg",
+      "bbox": {
+        "west": 23.52,
+        "south": 42.3,
+        "east": 23.65,
+        "north": 42.55
+      },
+      "active": true,
+      "lastPass": "—",
+      "nextPass": "—",
+      "activeAlerts": 0,
+      "indices": [
+        "NDCI",
+        "NDTI",
+        "NDWI"
+      ]
+    }
+  ],
+  "pins": [
+    {
+      "id": "iskar-pin-0",
+      "areaId": "iskar",
+      "name": "North inlet",
+      "lon": 23.629844,
+      "lat": 42.425181,
+      "ndci": 0.18,
+      "ndti": -0.04,
+      "ndwi": 0.6619,
+      "severity": "warning",
+      "lastReading": "Apr 22, 2026"
+    },
+    {
+      "id": "iskar-pin-1",
+      "areaId": "iskar",
+      "name": "Central basin",
+      "lon": 23.595595,
+      "lat": 42.454477,
+      "ndci": 0.21,
+      "ndti": -0.06,
+      "ndwi": 0.652,
+      "severity": "critical",
+      "lastReading": "Apr 22, 2026"
+    },
+    {
+      "id": "iskar-pin-2",
+      "areaId": "iskar",
+      "name": "Dam outflow",
+      "lon": 23.55194,
+      "lat": 42.463921,
+      "ndci": 0.05,
+      "ndti": -0.08,
+      "ndwi": 0.6423,
+      "severity": "ok",
+      "lastReading": "Apr 22, 2026"
+    },
+    {
+      "id": "iskar-pin-3",
+      "areaId": "iskar",
+      "name": "South cove",
+      "lon": 23.566851,
+      "lat": 42.422908,
+      "ndci": 0.13,
+      "ndti": -0.05,
+      "ndwi": 0.6486,
+      "severity": "warning",
+      "lastReading": "Apr 22, 2026"
+    },
+    {
+      "id": "iskar-pin-4",
+      "areaId": "iskar",
+      "name": "East shore",
+      "lon": 23.558982,
+      "lat": 42.418978,
+      "ndci": 0.07,
+      "ndti": -0.07,
+      "ndwi": 0.6405,
+      "severity": "ok",
+      "lastReading": "Apr 22, 2026"
+    },
+    {
+      "id": "varna-pin-0",
+      "areaId": "varna",
+      "name": "North inlet",
+      "lon": 27.89358,
+      "lat": 43.209252,
+      "ndci": 0.18,
+      "ndti": -0.04,
+      "ndwi": 0.6672,
+      "severity": "warning",
+      "lastReading": "Apr 21, 2026"
+    },
+    {
+      "id": "varna-pin-1",
+      "areaId": "varna",
+      "name": "Central basin",
+      "lon": 27.883489,
+      "lat": 43.235668,
+      "ndci": 0.21,
+      "ndti": -0.06,
+      "ndwi": 0.6667,
+      "severity": "critical",
+      "lastReading": "Apr 21, 2026"
+    },
+    {
+      "id": "varna-pin-2",
+      "areaId": "varna",
+      "name": "Dam outflow",
+      "lon": 28.012961,
+      "lat": 43.242551,
+      "ndci": 0.05,
+      "ndti": -0.08,
+      "ndwi": 0.6474,
+      "severity": "ok",
+      "lastReading": "Apr 21, 2026"
+    },
+    {
+      "id": "varna-pin-3",
+      "areaId": "varna",
+      "name": "South cove",
+      "lon": 27.973298,
+      "lat": 43.207963,
+      "ndci": 0.13,
+      "ndti": -0.05,
+      "ndwi": 0.6609,
+      "severity": "warning",
+      "lastReading": "Apr 21, 2026"
+    },
+    {
+      "id": "varna-pin-4",
+      "areaId": "varna",
+      "name": "East shore",
+      "lon": 27.953005,
+      "lat": 43.232034,
+      "ndci": 0.07,
+      "ndti": -0.07,
+      "ndwi": 0.6612,
+      "severity": "ok",
+      "lastReading": "Apr 21, 2026"
+    },
+    {
+      "id": "batak-pin-0",
+      "areaId": "batak",
+      "name": "North inlet",
+      "lon": 24.228314,
+      "lat": 42.008882,
+      "ndci": 0.18,
+      "ndti": -0.04,
+      "ndwi": 0.6705,
+      "severity": "warning",
+      "lastReading": "Apr 22, 2026"
+    },
+    {
+      "id": "batak-pin-1",
+      "areaId": "batak",
+      "name": "Central basin",
+      "lon": 24.153687,
+      "lat": 42.001892,
+      "ndci": 0.21,
+      "ndti": -0.06,
+      "ndwi": 0.6472,
+      "severity": "critical",
+      "lastReading": "Apr 22, 2026"
+    },
+    {
+      "id": "batak-pin-2",
+      "areaId": "batak",
+      "name": "Dam outflow",
+      "lon": 24.163511,
+      "lat": 42.002118,
+      "ndci": 0.05,
+      "ndti": -0.08,
+      "ndwi": 0.6797,
+      "severity": "ok",
+      "lastReading": "Apr 22, 2026"
+    },
+    {
+      "id": "batak-pin-3",
+      "areaId": "batak",
+      "name": "South cove",
+      "lon": 24.149622,
+      "lat": 42.021394,
+      "ndci": 0.13,
+      "ndti": -0.05,
+      "ndwi": 0.6434,
+      "severity": "warning",
+      "lastReading": "Apr 22, 2026"
+    },
+    {
+      "id": "batak-pin-4",
+      "areaId": "batak",
+      "name": "East shore",
+      "lon": 24.137771,
+      "lat": 41.98978,
+      "ndci": 0.07,
+      "ndti": -0.07,
+      "ndwi": 0.6647,
+      "severity": "ok",
+      "lastReading": "Apr 22, 2026"
+    },
+    {
+      "id": "kardzhali-pin-0",
+      "areaId": "kardzhali",
+      "name": "North inlet",
+      "lon": 25.377027,
+      "lat": 41.613784,
+      "ndci": 0.18,
+      "ndti": -0.04,
+      "ndwi": 0.6441,
+      "severity": "warning",
+      "lastReading": "Mar 10, 2026"
+    },
+    {
+      "id": "kardzhali-pin-1",
+      "areaId": "kardzhali",
+      "name": "Central basin",
+      "lon": 25.337446,
+      "lat": 41.642364,
+      "ndci": 0.21,
+      "ndti": -0.06,
+      "ndwi": 0.6616,
+      "severity": "critical",
+      "lastReading": "Mar 10, 2026"
+    },
+    {
+      "id": "kardzhali-pin-2",
+      "areaId": "kardzhali",
+      "name": "Dam outflow",
+      "lon": 25.349033,
+      "lat": 41.606543,
+      "ndci": 0.05,
+      "ndti": -0.08,
+      "ndwi": 0.6673,
+      "severity": "ok",
+      "lastReading": "Mar 10, 2026"
+    },
+    {
+      "id": "kardzhali-pin-3",
+      "areaId": "kardzhali",
+      "name": "South cove",
+      "lon": 25.395073,
+      "lat": 41.655269,
+      "ndci": 0.13,
+      "ndti": -0.05,
+      "ndwi": 0.666,
+      "severity": "warning",
+      "lastReading": "Mar 10, 2026"
+    },
+    {
+      "id": "kardzhali-pin-4",
+      "areaId": "kardzhali",
+      "name": "East shore",
+      "lon": 25.408886,
+      "lat": 41.642621,
+      "ndci": 0.07,
+      "ndti": -0.07,
+      "ndwi": 0.6612,
+      "severity": "ok",
+      "lastReading": "Mar 10, 2026"
     }
   ],
   "alerts": [
@@ -50,7 +1388,7 @@
       "title": "Algae bloom risk — elevated chlorophyll",
       "index": "NDCI",
       "value": 0.21,
-      "threshold": 0.20,
+      "threshold": 0.2,
       "durationDays": 12,
       "timestamp": "Apr 22, 09:12",
       "status": "active",
@@ -65,7 +1403,7 @@
       "title": "Turbidity rising above clear-water range",
       "index": "NDTI",
       "value": 0.04,
-      "threshold": 0.0,
+      "threshold": 0,
       "durationDays": 5,
       "timestamp": "Apr 21, 17:48",
       "status": "active",
@@ -97,7 +1435,7 @@
       "title": "All indices within normal range",
       "index": "NDCI",
       "value": 0.04,
-      "threshold": 0.10,
+      "threshold": 0.1,
       "durationDays": 0,
       "timestamp": "Mar 18, 08:00",
       "status": "resolved",
@@ -106,83 +1444,377 @@
     }
   ],
   "trend": [
-    { "id": "iskar-NDCI-Nov", "areaId": "iskar", "index": "NDCI", "month": "Nov", "value": 0.02, "lastYear": 0.03 },
-    { "id": "iskar-NDCI-Dec", "areaId": "iskar", "index": "NDCI", "month": "Dec", "value": 0.03, "lastYear": 0.04 },
-    { "id": "iskar-NDCI-Jan", "areaId": "iskar", "index": "NDCI", "month": "Jan", "value": 0.04, "lastYear": 0.05 },
-    { "id": "iskar-NDCI-Feb", "areaId": "iskar", "index": "NDCI", "month": "Feb", "value": 0.06, "lastYear": 0.06 },
-    { "id": "iskar-NDCI-Mar", "areaId": "iskar", "index": "NDCI", "month": "Mar", "value": 0.11, "lastYear": 0.08 },
-    { "id": "iskar-NDCI-Apr", "areaId": "iskar", "index": "NDCI", "month": "Apr", "value": 0.21, "lastYear": 0.09 },
-
-    { "id": "iskar-NDTI-Nov", "areaId": "iskar", "index": "NDTI", "month": "Nov", "value": -0.09 },
-    { "id": "iskar-NDTI-Dec", "areaId": "iskar", "index": "NDTI", "month": "Dec", "value": -0.05 },
-    { "id": "iskar-NDTI-Jan", "areaId": "iskar", "index": "NDTI", "month": "Jan", "value": -0.08 },
-    { "id": "iskar-NDTI-Feb", "areaId": "iskar", "index": "NDTI", "month": "Feb", "value": -0.03 },
-    { "id": "iskar-NDTI-Mar", "areaId": "iskar", "index": "NDTI", "month": "Mar", "value": -0.07 },
-    { "id": "iskar-NDTI-Apr", "areaId": "iskar", "index": "NDTI", "month": "Apr", "value": -0.06 },
-
-    { "id": "iskar-NDWI-Nov", "areaId": "iskar", "index": "NDWI", "month": "Nov", "value": 0.70 },
-    { "id": "iskar-NDWI-Dec", "areaId": "iskar", "index": "NDWI", "month": "Dec", "value": 0.71 },
-    { "id": "iskar-NDWI-Jan", "areaId": "iskar", "index": "NDWI", "month": "Jan", "value": 0.70 },
-    { "id": "iskar-NDWI-Feb", "areaId": "iskar", "index": "NDWI", "month": "Feb", "value": 0.69 },
-    { "id": "iskar-NDWI-Mar", "areaId": "iskar", "index": "NDWI", "month": "Mar", "value": 0.68 },
-    { "id": "iskar-NDWI-Apr", "areaId": "iskar", "index": "NDWI", "month": "Apr", "value": 0.66 },
-
-    { "id": "varna-NDCI-Nov", "areaId": "varna", "index": "NDCI", "month": "Nov", "value": 0.01, "lastYear": 0.02 },
-    { "id": "varna-NDCI-Dec", "areaId": "varna", "index": "NDCI", "month": "Dec", "value": 0.02, "lastYear": 0.02 },
-    { "id": "varna-NDCI-Jan", "areaId": "varna", "index": "NDCI", "month": "Jan", "value": 0.02, "lastYear": 0.03 },
-    { "id": "varna-NDCI-Feb", "areaId": "varna", "index": "NDCI", "month": "Feb", "value": 0.03, "lastYear": 0.03 },
-    { "id": "varna-NDCI-Mar", "areaId": "varna", "index": "NDCI", "month": "Mar", "value": 0.05, "lastYear": 0.04 },
-    { "id": "varna-NDCI-Apr", "areaId": "varna", "index": "NDCI", "month": "Apr", "value": 0.08, "lastYear": 0.05 },
-
-    { "id": "varna-NDTI-Nov", "areaId": "varna", "index": "NDTI", "month": "Nov", "value": -0.04 },
-    { "id": "varna-NDTI-Dec", "areaId": "varna", "index": "NDTI", "month": "Dec", "value": -0.03 },
-    { "id": "varna-NDTI-Jan", "areaId": "varna", "index": "NDTI", "month": "Jan", "value": -0.02 },
-    { "id": "varna-NDTI-Feb", "areaId": "varna", "index": "NDTI", "month": "Feb", "value": 0.01 },
-    { "id": "varna-NDTI-Mar", "areaId": "varna", "index": "NDTI", "month": "Mar", "value": 0.02 },
-    { "id": "varna-NDTI-Apr", "areaId": "varna", "index": "NDTI", "month": "Apr", "value": 0.04 },
-
-    { "id": "batak-NDCI-Nov", "areaId": "batak", "index": "NDCI", "month": "Nov", "value": 0.01 },
-    { "id": "batak-NDCI-Dec", "areaId": "batak", "index": "NDCI", "month": "Dec", "value": 0.02 },
-    { "id": "batak-NDCI-Jan", "areaId": "batak", "index": "NDCI", "month": "Jan", "value": 0.02 },
-    { "id": "batak-NDCI-Feb", "areaId": "batak", "index": "NDCI", "month": "Feb", "value": 0.03 },
-    { "id": "batak-NDCI-Mar", "areaId": "batak", "index": "NDCI", "month": "Mar", "value": 0.03 },
-    { "id": "batak-NDCI-Apr", "areaId": "batak", "index": "NDCI", "month": "Apr", "value": 0.04 },
-
-    { "id": "batak-NDWI-Nov", "areaId": "batak", "index": "NDWI", "month": "Nov", "value": 0.75 },
-    { "id": "batak-NDWI-Dec", "areaId": "batak", "index": "NDWI", "month": "Dec", "value": 0.74 },
-    { "id": "batak-NDWI-Jan", "areaId": "batak", "index": "NDWI", "month": "Jan", "value": 0.75 },
-    { "id": "batak-NDWI-Feb", "areaId": "batak", "index": "NDWI", "month": "Feb", "value": 0.73 },
-    { "id": "batak-NDWI-Mar", "areaId": "batak", "index": "NDWI", "month": "Mar", "value": 0.72 },
-    { "id": "batak-NDWI-Apr", "areaId": "batak", "index": "NDWI", "month": "Apr", "value": 0.71 },
-
-    { "id": "kardzhali-NDCI-Nov", "areaId": "kardzhali", "index": "NDCI", "month": "Nov", "value": 0.01 },
-    { "id": "kardzhali-NDCI-Dec", "areaId": "kardzhali", "index": "NDCI", "month": "Dec", "value": 0.01 },
-    { "id": "kardzhali-NDCI-Jan", "areaId": "kardzhali", "index": "NDCI", "month": "Jan", "value": 0.02 },
-    { "id": "kardzhali-NDCI-Feb", "areaId": "kardzhali", "index": "NDCI", "month": "Feb", "value": 0.02 },
-    { "id": "kardzhali-NDCI-Mar", "areaId": "kardzhali", "index": "NDCI", "month": "Mar", "value": 0.02 },
-    { "id": "kardzhali-NDCI-Apr", "areaId": "kardzhali", "index": "NDCI", "month": "Apr", "value": 0.03 }
+    {
+      "id": "iskar-NDCI-Nov",
+      "areaId": "iskar",
+      "index": "NDCI",
+      "month": "Nov",
+      "value": 0.02,
+      "lastYear": 0.03
+    },
+    {
+      "id": "iskar-NDCI-Dec",
+      "areaId": "iskar",
+      "index": "NDCI",
+      "month": "Dec",
+      "value": 0.03,
+      "lastYear": 0.04
+    },
+    {
+      "id": "iskar-NDCI-Jan",
+      "areaId": "iskar",
+      "index": "NDCI",
+      "month": "Jan",
+      "value": 0.04,
+      "lastYear": 0.05
+    },
+    {
+      "id": "iskar-NDCI-Feb",
+      "areaId": "iskar",
+      "index": "NDCI",
+      "month": "Feb",
+      "value": 0.06,
+      "lastYear": 0.06
+    },
+    {
+      "id": "iskar-NDCI-Mar",
+      "areaId": "iskar",
+      "index": "NDCI",
+      "month": "Mar",
+      "value": 0.11,
+      "lastYear": 0.08
+    },
+    {
+      "id": "iskar-NDCI-Apr",
+      "areaId": "iskar",
+      "index": "NDCI",
+      "month": "Apr",
+      "value": 0.21,
+      "lastYear": 0.09
+    },
+    {
+      "id": "iskar-NDTI-Nov",
+      "areaId": "iskar",
+      "index": "NDTI",
+      "month": "Nov",
+      "value": -0.09
+    },
+    {
+      "id": "iskar-NDTI-Dec",
+      "areaId": "iskar",
+      "index": "NDTI",
+      "month": "Dec",
+      "value": -0.05
+    },
+    {
+      "id": "iskar-NDTI-Jan",
+      "areaId": "iskar",
+      "index": "NDTI",
+      "month": "Jan",
+      "value": -0.08
+    },
+    {
+      "id": "iskar-NDTI-Feb",
+      "areaId": "iskar",
+      "index": "NDTI",
+      "month": "Feb",
+      "value": -0.03
+    },
+    {
+      "id": "iskar-NDTI-Mar",
+      "areaId": "iskar",
+      "index": "NDTI",
+      "month": "Mar",
+      "value": -0.07
+    },
+    {
+      "id": "iskar-NDTI-Apr",
+      "areaId": "iskar",
+      "index": "NDTI",
+      "month": "Apr",
+      "value": -0.06
+    },
+    {
+      "id": "iskar-NDWI-Nov",
+      "areaId": "iskar",
+      "index": "NDWI",
+      "month": "Nov",
+      "value": 0.7
+    },
+    {
+      "id": "iskar-NDWI-Dec",
+      "areaId": "iskar",
+      "index": "NDWI",
+      "month": "Dec",
+      "value": 0.71
+    },
+    {
+      "id": "iskar-NDWI-Jan",
+      "areaId": "iskar",
+      "index": "NDWI",
+      "month": "Jan",
+      "value": 0.7
+    },
+    {
+      "id": "iskar-NDWI-Feb",
+      "areaId": "iskar",
+      "index": "NDWI",
+      "month": "Feb",
+      "value": 0.69
+    },
+    {
+      "id": "iskar-NDWI-Mar",
+      "areaId": "iskar",
+      "index": "NDWI",
+      "month": "Mar",
+      "value": 0.68
+    },
+    {
+      "id": "iskar-NDWI-Apr",
+      "areaId": "iskar",
+      "index": "NDWI",
+      "month": "Apr",
+      "value": 0.66
+    },
+    {
+      "id": "varna-NDCI-Nov",
+      "areaId": "varna",
+      "index": "NDCI",
+      "month": "Nov",
+      "value": 0.01,
+      "lastYear": 0.02
+    },
+    {
+      "id": "varna-NDCI-Dec",
+      "areaId": "varna",
+      "index": "NDCI",
+      "month": "Dec",
+      "value": 0.02,
+      "lastYear": 0.02
+    },
+    {
+      "id": "varna-NDCI-Jan",
+      "areaId": "varna",
+      "index": "NDCI",
+      "month": "Jan",
+      "value": 0.02,
+      "lastYear": 0.03
+    },
+    {
+      "id": "varna-NDCI-Feb",
+      "areaId": "varna",
+      "index": "NDCI",
+      "month": "Feb",
+      "value": 0.03,
+      "lastYear": 0.03
+    },
+    {
+      "id": "varna-NDCI-Mar",
+      "areaId": "varna",
+      "index": "NDCI",
+      "month": "Mar",
+      "value": 0.05,
+      "lastYear": 0.04
+    },
+    {
+      "id": "varna-NDCI-Apr",
+      "areaId": "varna",
+      "index": "NDCI",
+      "month": "Apr",
+      "value": 0.08,
+      "lastYear": 0.05
+    },
+    {
+      "id": "varna-NDTI-Nov",
+      "areaId": "varna",
+      "index": "NDTI",
+      "month": "Nov",
+      "value": -0.04
+    },
+    {
+      "id": "varna-NDTI-Dec",
+      "areaId": "varna",
+      "index": "NDTI",
+      "month": "Dec",
+      "value": -0.03
+    },
+    {
+      "id": "varna-NDTI-Jan",
+      "areaId": "varna",
+      "index": "NDTI",
+      "month": "Jan",
+      "value": -0.02
+    },
+    {
+      "id": "varna-NDTI-Feb",
+      "areaId": "varna",
+      "index": "NDTI",
+      "month": "Feb",
+      "value": 0.01
+    },
+    {
+      "id": "varna-NDTI-Mar",
+      "areaId": "varna",
+      "index": "NDTI",
+      "month": "Mar",
+      "value": 0.02
+    },
+    {
+      "id": "varna-NDTI-Apr",
+      "areaId": "varna",
+      "index": "NDTI",
+      "month": "Apr",
+      "value": 0.04
+    },
+    {
+      "id": "batak-NDCI-Nov",
+      "areaId": "batak",
+      "index": "NDCI",
+      "month": "Nov",
+      "value": 0.01
+    },
+    {
+      "id": "batak-NDCI-Dec",
+      "areaId": "batak",
+      "index": "NDCI",
+      "month": "Dec",
+      "value": 0.02
+    },
+    {
+      "id": "batak-NDCI-Jan",
+      "areaId": "batak",
+      "index": "NDCI",
+      "month": "Jan",
+      "value": 0.02
+    },
+    {
+      "id": "batak-NDCI-Feb",
+      "areaId": "batak",
+      "index": "NDCI",
+      "month": "Feb",
+      "value": 0.03
+    },
+    {
+      "id": "batak-NDCI-Mar",
+      "areaId": "batak",
+      "index": "NDCI",
+      "month": "Mar",
+      "value": 0.03
+    },
+    {
+      "id": "batak-NDCI-Apr",
+      "areaId": "batak",
+      "index": "NDCI",
+      "month": "Apr",
+      "value": 0.04
+    },
+    {
+      "id": "batak-NDWI-Nov",
+      "areaId": "batak",
+      "index": "NDWI",
+      "month": "Nov",
+      "value": 0.75
+    },
+    {
+      "id": "batak-NDWI-Dec",
+      "areaId": "batak",
+      "index": "NDWI",
+      "month": "Dec",
+      "value": 0.74
+    },
+    {
+      "id": "batak-NDWI-Jan",
+      "areaId": "batak",
+      "index": "NDWI",
+      "month": "Jan",
+      "value": 0.75
+    },
+    {
+      "id": "batak-NDWI-Feb",
+      "areaId": "batak",
+      "index": "NDWI",
+      "month": "Feb",
+      "value": 0.73
+    },
+    {
+      "id": "batak-NDWI-Mar",
+      "areaId": "batak",
+      "index": "NDWI",
+      "month": "Mar",
+      "value": 0.72
+    },
+    {
+      "id": "batak-NDWI-Apr",
+      "areaId": "batak",
+      "index": "NDWI",
+      "month": "Apr",
+      "value": 0.71
+    },
+    {
+      "id": "kardzhali-NDCI-Nov",
+      "areaId": "kardzhali",
+      "index": "NDCI",
+      "month": "Nov",
+      "value": 0.01
+    },
+    {
+      "id": "kardzhali-NDCI-Dec",
+      "areaId": "kardzhali",
+      "index": "NDCI",
+      "month": "Dec",
+      "value": 0.01
+    },
+    {
+      "id": "kardzhali-NDCI-Jan",
+      "areaId": "kardzhali",
+      "index": "NDCI",
+      "month": "Jan",
+      "value": 0.02
+    },
+    {
+      "id": "kardzhali-NDCI-Feb",
+      "areaId": "kardzhali",
+      "index": "NDCI",
+      "month": "Feb",
+      "value": 0.02
+    },
+    {
+      "id": "kardzhali-NDCI-Mar",
+      "areaId": "kardzhali",
+      "index": "NDCI",
+      "month": "Mar",
+      "value": 0.02
+    },
+    {
+      "id": "kardzhali-NDCI-Apr",
+      "areaId": "kardzhali",
+      "index": "NDCI",
+      "month": "Apr",
+      "value": 0.03
+    }
   ],
   "notes": [
     {
-      "id": 1,
+      "id": "1",
       "alertId": "a1",
       "author": "M. Petrova",
       "timestamp": "Apr 22, 10:04",
       "body": "Cross-checked with on-site sampling team. They confirm visible green tint near the northern shore. Increasing sampling frequency to daily until values normalize."
     },
     {
-      "id": 2,
+      "id": "2",
       "alertId": "a1",
       "author": "I. Kolev",
       "timestamp": "Apr 22, 14:30",
       "body": "Notified treatment supervisor. Pre-chlorination dose adjusted by +0.2 mg/L."
     },
     {
-      "id": 3,
+      "id": "3",
       "alertId": "a2",
       "author": "I. Kolev",
       "timestamp": "Apr 21, 18:05",
       "body": "Rainfall event confirmed — 28mm over 6 hours upstream. Sediment plume visible in true-colour composite."
     }
-  ]
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }

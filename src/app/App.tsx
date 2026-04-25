@@ -166,9 +166,9 @@ export default function App() {
             if (!v) dispatch({ type: "closeDrawer" })
           }}
           area={ui.drawerArea}
-          onSave={(a) => {
+          onSave={async (a) => {
             const exists = areas.find((x) => x.id === a.id)
-            exists ? editArea(a) : addArea(a)
+            await (exists ? editArea(a) : addArea(a))
           }}
           onDelete={deleteArea}
         />

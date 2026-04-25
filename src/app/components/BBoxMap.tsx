@@ -1,42 +1,116 @@
+import { useEffect, useRef } from "react";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
+import type { BBox, PolygonPoint } from "../lib/data";
+import { geometryKey, getGeometryBounds } from "../lib/geometry";
+
+const BBOX_COLOR = "#185fa5";
+
 export function BBoxMap({
   bbox,
+  polygon,
   height = 180,
   caption,
+  interactive = false,
 }: {
-  bbox: { west: number; south: number; east: number; north: number };
+  bbox?: BBox;
+  polygon?: PolygonPoint[];
   height?: number;
   caption?: string;
+  interactive?: boolean;
 }) {
-  const lonToX = (lon: number) => ((lon + 180) / 360) * 100;
-  const latToY = (lat: number) => ((90 - lat) / 180) * 100;
+  const containerRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<L.Map | null>(null);
+  const key = geometryKey({ bbox, polygon });
 
-  const x = lonToX(bbox.west);
-  const y = latToY(bbox.north);
-  const w = lonToX(bbox.east) - x;
-  const h = latToY(bbox.south) - y;
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const geometryBounds = getGeometryBounds({ bbox, polygon });
+    if (!geometryBounds) return;
 
-  const padX = Math.max(8, w * 6);
-  const padY = Math.max(6, h * 6);
-  const vbX = Math.max(0, x - padX);
-  const vbY = Math.max(0, y - padY);
-  const vbW = Math.min(100 - vbX, w + padX * 2);
-  const vbH = Math.min(100 - vbY, h + padY * 2);
+    if (mapRef.current) {
+      mapRef.current.remove();
+      mapRef.current = null;
+    }
+
+    const bounds: L.LatLngBoundsExpression = [
+      [geometryBounds.south, geometryBounds.west],
+      [geometryBounds.north, geometryBounds.east],
+    ];
+
+    const map = L.map(containerRef.current, {
+      zoomControl: interactive,
+      scrollWheelZoom: interactive,
+      dragging: interactive,
+      touchZoom: interactive,
+      doubleClickZoom: interactive,
+      boxZoom: false,
+      keyboard: false,
+      attributionControl: interactive,
+    });
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      maxZoom: 19,
+    }).addTo(map);
+
+    if (polygon?.length && polygon.length >= 3) {
+      L.polygon(
+        polygon.map((point) => [point.lat, point.lon]),
+        {
+          color: BBOX_COLOR,
+          weight: 2,
+          fillColor: BBOX_COLOR,
+          fillOpacity: 0.18,
+        },
+      ).addTo(map);
+    } else {
+      L.rectangle(bounds, {
+        color: BBOX_COLOR,
+        weight: 2,
+        fillColor: BBOX_COLOR,
+        fillOpacity: 0.18,
+      }).addTo(map);
+    }
+
+    map.fitBounds(bounds, { padding: [30, 30] });
+
+    const ro = new ResizeObserver(() => map.invalidateSize());
+    ro.observe(containerRef.current);
+
+    mapRef.current = map;
+
+    return () => {
+      ro.disconnect();
+      map.remove();
+      mapRef.current = null;
+    };
+  }, [key, interactive]);
 
   return (
-    <div className="border" style={{ borderRadius: 8, overflow: "hidden", background: "var(--secondary)" }}>
-      <svg viewBox={`${vbX} ${vbY} ${vbW} ${vbH}`} width="100%" height={height} preserveAspectRatio="xMidYMid meet">
-        <rect x={vbX} y={vbY} width={vbW} height={vbH} fill="var(--secondary)" />
-        {Array.from({ length: 9 }).map((_, i) => (
-          <line key={`h${i}`} x1={vbX} x2={vbX + vbW} y1={vbY + (vbH * (i + 1)) / 10} y2={vbY + (vbH * (i + 1)) / 10} stroke="var(--border)" strokeWidth={0.05} />
-        ))}
-        {Array.from({ length: 9 }).map((_, i) => (
-          <line key={`v${i}`} y1={vbY} y2={vbY + vbH} x1={vbX + (vbW * (i + 1)) / 10} x2={vbX + (vbW * (i + 1)) / 10} stroke="var(--border)" strokeWidth={0.05} />
-        ))}
-        <rect x={x} y={y} width={w} height={h} fill="var(--primary)" fillOpacity={0.18} stroke="var(--primary)" strokeWidth={0.2} />
-        <circle cx={x + w / 2} cy={y + h / 2} r={0.5} fill="var(--primary)" />
-      </svg>
+    <div
+      className="border"
+      style={{ borderRadius: 8, overflow: "hidden", isolation: "isolate" }}
+    >
+      <div
+        ref={containerRef}
+        style={{
+          height,
+          width: "100%",
+          pointerEvents: interactive ? "auto" : "none",
+        }}
+      />
       {caption && (
-        <div style={{ fontSize: 11, padding: "6px 10px", color: "var(--muted-foreground)", borderTop: "1px solid var(--border)", fontFamily: "ui-monospace, monospace" }}>
+        <div
+          style={{
+            fontSize: 11,
+            padding: "6px 10px",
+            color: "var(--muted-foreground)",
+            borderTop: "1px solid var(--border)",
+            fontFamily: "ui-monospace, monospace",
+          }}
+        >
           {caption}
         </div>
       )}
