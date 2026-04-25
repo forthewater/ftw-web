@@ -35,7 +35,7 @@ export function AreaSelector({
           )}
           {areas.map((a) => (
             <SelectItem key={a.id} value={a.id}>
-              {a.name}
+              {a.waterBodyDetails.name}
             </SelectItem>
           ))}
         </SelectContent>

@@ -3,7 +3,10 @@ import { api } from "../api";
 import { areas as mockAreas, type Area } from "../data";
 
 /**
- * Fetches the list of monitored areas.
+ * Fetches the list of tracked water body areas from /waterbody/track.
+ * The endpoint may return a single object or an array — both are normalised
+ * to an array before being stored.
+ *
  * While VITE_API_BASE_URL is unset the hook falls back to the mock data
  * so development continues without a backend.
  *
@@ -21,8 +24,9 @@ export function useAreas() {
     setLoading(true);
     setError(null);
     try {
-      const { data } = await api.get<Area[]>("/areas");
-      setAreas(data);
+      // Real backend: GET /waterbody/track — mock server: GET /track
+      const { data } = await api.get<Area | Area[]>("/track");
+      setAreas(Array.isArray(data) ? data : [data]);
     } catch {
       setError("Failed to load areas");
     } finally {
@@ -30,11 +34,13 @@ export function useAreas() {
     }
   }, []);
 
-  useEffect(() => { fetchAreas(); }, [fetchAreas]);
+  useEffect(() => {
+    fetchAreas();
+  }, [fetchAreas]);
 
   const addArea = useCallback(async (area: Area) => {
     if (hasApi) {
-      const { data } = await api.post<Area>("/areas", area);
+      const { data } = await api.post<Area>("/track", area);
       setAreas((prev) => [...prev, data]);
       return data;
     }
@@ -45,7 +51,7 @@ export function useAreas() {
 
   const editArea = useCallback(async (area: Area) => {
     if (hasApi) {
-      const { data } = await api.put<Area>(`/areas/${area.id}`, area);
+      const { data } = await api.put<Area>(`/track/${area.id}`, area);
       setAreas((prev) => prev.map((a) => (a.id === data.id ? data : a)));
       return data;
     }
@@ -56,13 +62,24 @@ export function useAreas() {
 
   const deleteArea = useCallback(async (id: string) => {
     setAreas((prev) => prev.filter((a) => a.id !== id));
-    // await api.delete(`/areas/${id}`);
+    // await api.delete(`/waterbody/track/${id}`);
   }, []);
 
   const toggleArea = useCallback((id: string) => {
-    setAreas((prev) => prev.map((a) => (a.id === id ? { ...a, active: !a.active } : a)));
-    // await api.patch(`/areas/${id}/toggle`);
+    setAreas((prev) =>
+      prev.map((a) => (a.id === id ? { ...a, active: !a.active } : a)),
+    );
+    // await api.patch(`/waterbody/track/${id}/toggle`);
   }, []);
 
-  return { areas, loading, error, addArea, editArea, deleteArea, toggleArea, refetch: fetchAreas };
+  return {
+    areas,
+    loading,
+    error,
+    addArea,
+    editArea,
+    deleteArea,
+    toggleArea,
+    refetch: fetchAreas,
+  };
 }

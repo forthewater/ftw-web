@@ -77,7 +77,7 @@ export function Areas({
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <h3 style={{ marginBottom: 0 }}>{a.name}</h3>
+                      <h3 style={{ marginBottom: 0 }}>{a.waterBodyDetails.name}</h3>
                       {a.activeAlerts > 0 ? (
                         <span
                           style={{
@@ -133,9 +133,9 @@ export function Areas({
                   onClick={() => onView(a)}
                   className="relative group block w-full text-left"
                   style={{ borderRadius: 8, overflow: "hidden" }}
-                  aria-label={`Open detailed view for ${a.name}`}
+                  aria-label={`Open detailed view for ${a.waterBodyDetails.name}`}
                 >
-                  <BBoxMap bbox={a.bbox} polygon={a.polygon} height={130} />
+                  <BBoxMap bbox={a.waterBodyDetails.bbox} polygon={a.waterBodyDetails.polygon} height={130} />
                   <div
                     className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
                     style={{ background: "rgba(24, 95, 165, 0.18)" }}
@@ -161,9 +161,11 @@ export function Areas({
                   className="flex items-center justify-between flex-wrap gap-2"
                   style={{ fontSize: 12 }}
                 >
-                  {/* <div style={{ color: "var(--muted-foreground)" }}>
-                Last pass: {a.lastPass}
-              </div> */}
+                  <div style={{ color: "var(--muted-foreground)" }}>
+                    Last pass: {a.weeklyWaterMetrics[a.weeklyWaterMetrics.length - 1]?.to
+                      ? new Date(a.weeklyWaterMetrics[a.weeklyWaterMetrics.length - 1].to).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+                      : "—"}
+                  </div>
                   <div className="flex gap-1">
                     <Button variant="ghost" size="sm" onClick={() => onView(a)}>
                       <Maximize2 size={13} /> View
@@ -175,7 +177,7 @@ export function Areas({
                       variant="ghost"
                       size="sm"
                       onClick={() => {
-                        if (confirm(`Delete "${a.name}"?`)) onDelete(a.id)
+                        if (confirm(`Delete "${a.waterBodyDetails.name}"?`)) onDelete(a.id)
                       }}
                       style={{ color: "var(--severity-critical)" }}
                     >

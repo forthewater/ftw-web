@@ -177,7 +177,7 @@ export function AppShell({
                 className="truncate"
                 style={{ fontSize: 13, fontWeight: 500 }}
               >
-                {area ? area.name : "All areas"}
+                {area ? area.waterBodyDetails.name : "All areas"}
               </span>
             </div>
           </div>
@@ -187,7 +187,7 @@ export function AppShell({
             style={{ fontSize: 12, color: "var(--muted-foreground)" }}
           >
             {area
-              ? `Last pass: ${area.lastPass} · Next: ${area.nextPass}`
+              ? `Last pass: ${area.weeklyWaterMetrics.length ? new Date(area.weeklyWaterMetrics[area.weeklyWaterMetrics.length - 1].to).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "—"} · Next: —`
               : null}
           </div>
         </header>

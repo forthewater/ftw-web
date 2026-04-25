@@ -1,10 +1,10 @@
-import { useEffect, useRef } from "react";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
-import type { BBox, PolygonPoint } from "../lib/data";
-import { geometryKey, getGeometryBounds } from "../lib/geometry";
+import { useEffect, useRef } from "react"
+import L from "leaflet"
+import "leaflet/dist/leaflet.css"
+import type { BBox, PolygonPoint } from "../lib/data"
+import { geometryKey, getGeometryBounds } from "../lib/geometry"
 
-const BBOX_COLOR = "#185fa5";
+const BBOX_COLOR = "#185fa5"
 
 export function BBoxMap({
   bbox,
@@ -13,30 +13,30 @@ export function BBoxMap({
   caption,
   interactive = false,
 }: {
-  bbox?: BBox;
-  polygon?: PolygonPoint[];
-  height?: number;
-  caption?: string;
-  interactive?: boolean;
+  bbox?: BBox
+  polygon?: PolygonPoint[]
+  height?: number
+  caption?: string
+  interactive?: boolean
 }) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const mapRef = useRef<L.Map | null>(null);
-  const key = geometryKey({ bbox, polygon });
+  const containerRef = useRef<HTMLDivElement>(null)
+  const mapRef = useRef<L.Map | null>(null)
+  const key = geometryKey({ bbox, polygon })
 
   useEffect(() => {
-    if (!containerRef.current) return;
-    const geometryBounds = getGeometryBounds({ bbox, polygon });
-    if (!geometryBounds) return;
+    if (!containerRef.current) return
+    const geometryBounds = getGeometryBounds({ bbox, polygon })
+    if (!geometryBounds) return
 
     if (mapRef.current) {
-      mapRef.current.remove();
-      mapRef.current = null;
+      mapRef.current.remove()
+      mapRef.current = null
     }
 
     const bounds: L.LatLngBoundsExpression = [
       [geometryBounds.south, geometryBounds.west],
       [geometryBounds.north, geometryBounds.east],
-    ];
+    ]
 
     const map = L.map(containerRef.current, {
       zoomControl: interactive,
@@ -47,13 +47,13 @@ export function BBoxMap({
       boxZoom: false,
       keyboard: false,
       attributionControl: interactive,
-    });
+    })
 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       maxZoom: 19,
-    }).addTo(map);
+    }).addTo(map)
 
     if (polygon?.length && polygon.length >= 3) {
       L.polygon(
@@ -64,29 +64,29 @@ export function BBoxMap({
           fillColor: BBOX_COLOR,
           fillOpacity: 0.18,
         },
-      ).addTo(map);
+      ).addTo(map)
     } else {
       L.rectangle(bounds, {
         color: BBOX_COLOR,
         weight: 2,
         fillColor: BBOX_COLOR,
         fillOpacity: 0.18,
-      }).addTo(map);
+      }).addTo(map)
     }
 
-    map.fitBounds(bounds, { padding: [30, 30] });
+    map.fitBounds(bounds, { padding: [30, 30] })
 
-    const ro = new ResizeObserver(() => map.invalidateSize());
-    ro.observe(containerRef.current);
+    const ro = new ResizeObserver(() => map.invalidateSize())
+    ro.observe(containerRef.current)
 
-    mapRef.current = map;
+    mapRef.current = map
 
     return () => {
-      ro.disconnect();
-      map.remove();
-      mapRef.current = null;
-    };
-  }, [key, interactive]);
+      ro.disconnect()
+      map.remove()
+      mapRef.current = null
+    }
+  }, [key, interactive])
 
   return (
     <div
@@ -115,5 +115,5 @@ export function BBoxMap({
         </div>
       )}
     </div>
-  );
+  )
 }

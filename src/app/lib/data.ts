@@ -15,24 +15,35 @@ export const INDEX_DESCRIPTIONS: Record<Index, string> = {
   NDWI: "Water extent tracking",
 };
 
-export type Area = {
-  id: string;
-  name: string;
-  bbox?: BBox;
-  polygon?: PolygonPoint[];
-  warning?: string | null;
-  active: boolean;
-  lastPass: string;
-  nextPass: string;
-  activeAlerts: number;
-  indices: Index[];
-};
-
 export type BBox = { west: number; south: number; east: number; north: number };
 
 export type PolygonPoint = {
   lat: number;
   lon: number;
+};
+
+export type WaterBodyDetails = {
+  name: string;
+  bbox?: BBox;
+  polygon?: PolygonPoint[];
+  warning?: string | null;
+};
+
+export type WeeklyWaterMetric = {
+  from: string;
+  to: string;
+  ndci: number;
+  ndwi: number;
+  turbidity: number;
+};
+
+export type Area = {
+  id: string;
+  active: boolean;
+  activeAlerts: number;
+  indices: Index[];
+  waterBodyDetails: WaterBodyDetails;
+  weeklyWaterMetrics: WeeklyWaterMetric[];
 };
 
 export type Pin = {
@@ -69,43 +80,84 @@ export type Alert = {
 export const areas: Area[] = [
   {
     id: "iskar",
-    name: "Язовир Искър",
-    bbox: { west: 23.52, south: 42.40, east: 23.65, north: 42.52 },
     active: true,
-    lastPass: "Apr 22, 2026",
-    nextPass: "Apr 27, 2026",
     activeAlerts: 1,
     indices: ["NDCI", "NDTI", "NDWI"],
+    waterBodyDetails: {
+      name: "Панчаревско езеро",
+      polygon: [
+        { lat: 42.5880169, lon: 23.4243249 },
+        { lat: 42.588404,  lon: 23.4238873 },
+        { lat: 42.5886897, lon: 23.4234302 },
+        { lat: 42.5935212, lon: 23.4165597 },
+        { lat: 42.5937448, lon: 23.4161776 },
+        { lat: 42.594069,  lon: 23.4158756 },
+        { lat: 42.6050656, lon: 23.4067836 },
+        { lat: 42.6033041, lon: 23.4085558 },
+        { lat: 42.5880169, lon: 23.4243249 },
+      ],
+      warning: null,
+    },
+    weeklyWaterMetrics: [
+      { from: "2026-02-22T18:17:38Z", to: "2026-03-01T18:17:38Z", ndci: 0.013253757404240897, ndwi: 0.07496732024721033, turbidity: 0.10329367460525897 },
+      { from: "2026-03-01T18:17:38Z", to: "2026-03-08T18:17:38Z", ndci: -0.07645749126016130, ndwi: 0.5348607571264764, turbidity: 0.020136487354030393 },
+      { from: "2026-03-08T18:17:38Z", to: "2026-03-15T18:17:38Z", ndci: 0.002486708379072319, ndwi: 0.01155732132658018, turbidity: 0.9014880056630342 },
+      { from: "2026-03-15T18:17:38Z", to: "2026-03-22T18:17:38Z", ndci: 0.015356270038734368, ndwi: -0.016965181624630205, turbidity: 0.6652010290310463 },
+      { from: "2026-03-22T18:17:38Z", to: "2026-03-29T18:17:38Z", ndci: 0.033149722212513326, ndwi: -0.04292591968274154, turbidity: 0.4960633673402198 },
+      { from: "2026-03-29T18:17:38Z", to: "2026-04-05T18:17:38Z", ndci: -0.06183710115093628, ndwi: 0.46904153856305436, turbidity: 0.025665517306260228 },
+      { from: "2026-04-05T18:17:38Z", to: "2026-04-12T18:17:38Z", ndci: -0.014123830425896261, ndwi: 0.42578033965426304, turbidity: 0.022962899947396514 },
+      { from: "2026-04-12T18:17:38Z", to: "2026-04-19T18:17:38Z", ndci: 0.021551229524069827, ndwi: 0.02179901035030263, turbidity: 0.7110555880499129 },
+      { from: "2026-04-19T18:17:38Z", to: "2026-04-26T18:17:38Z", ndci: 0.02809975753229118, ndwi: -0.02836746719619536, turbidity: 0.7565368296207859 },
+    ],
   },
   {
     id: "varna",
-    name: "Black Sea Coast — Varna",
-    bbox: { west: 27.85, south: 43.18, east: 28.05, north: 43.28 },
     active: true,
-    lastPass: "Apr 21, 2026",
-    nextPass: "Apr 26, 2026",
     activeAlerts: 1,
     indices: ["NDCI", "NDTI"],
+    waterBodyDetails: {
+      name: "Black Sea Coast — Varna",
+      bbox: { west: 27.85, south: 43.18, east: 28.05, north: 43.28 },
+    },
+    weeklyWaterMetrics: [
+      { from: "2026-03-22T18:17:38Z", to: "2026-03-29T18:17:38Z", ndci: 0.05, ndwi: 0.11, turbidity: 0.09 },
+      { from: "2026-03-29T18:17:38Z", to: "2026-04-05T18:17:38Z", ndci: 0.06, ndwi: 0.13, turbidity: 0.05 },
+      { from: "2026-04-05T18:17:38Z", to: "2026-04-12T18:17:38Z", ndci: 0.07, ndwi: 0.16, turbidity: 0.04 },
+      { from: "2026-04-12T18:17:38Z", to: "2026-04-19T18:17:38Z", ndci: 0.08, ndwi: 0.11, turbidity: 0.06 },
+      { from: "2026-04-19T18:17:38Z", to: "2026-04-26T18:17:38Z", ndci: 0.08, ndwi: 0.09, turbidity: 0.04 },
+    ],
   },
   {
     id: "batak",
-    name: "Язовир Батак",
-    bbox: { west: 24.10, south: 41.92, east: 24.28, north: 42.04 },
     active: true,
-    lastPass: "Apr 22, 2026",
-    nextPass: "Apr 27, 2026",
     activeAlerts: 0,
     indices: ["NDCI", "NDWI"],
+    waterBodyDetails: {
+      name: "Язовир Батак",
+      bbox: { west: 24.10, south: 41.92, east: 24.28, north: 42.04 },
+    },
+    weeklyWaterMetrics: [
+      { from: "2026-03-22T18:17:38Z", to: "2026-03-29T18:17:38Z", ndci: 0.02, ndwi: 0.72, turbidity: 0.03 },
+      { from: "2026-03-29T18:17:38Z", to: "2026-04-05T18:17:38Z", ndci: 0.03, ndwi: 0.74, turbidity: 0.05 },
+      { from: "2026-04-05T18:17:38Z", to: "2026-04-12T18:17:38Z", ndci: 0.02, ndwi: 0.75, turbidity: 0.03 },
+      { from: "2026-04-12T18:17:38Z", to: "2026-04-19T18:17:38Z", ndci: 0.03, ndwi: 0.73, turbidity: 0.04 },
+      { from: "2026-04-19T18:17:38Z", to: "2026-04-26T18:17:38Z", ndci: 0.04, ndwi: 0.71, turbidity: 0.02 },
+    ],
   },
   {
     id: "kardzhali",
-    name: "Язовир Кърджали",
-    bbox: { west: 25.30, south: 41.58, east: 25.48, north: 41.70 },
     active: false,
-    lastPass: "Mar 10, 2026",
-    nextPass: "Paused",
     activeAlerts: 0,
     indices: ["NDCI"],
+    waterBodyDetails: {
+      name: "Язовир Кърджали",
+      bbox: { west: 25.30, south: 41.58, east: 25.48, north: 41.70 },
+    },
+    weeklyWaterMetrics: [
+      { from: "2026-02-15T18:17:38Z", to: "2026-02-22T18:17:38Z", ndci: 0.03, ndwi: 0.60, turbidity: 0.05 },
+      { from: "2026-02-22T18:17:38Z", to: "2026-03-01T18:17:38Z", ndci: 0.02, ndwi: 0.57, turbidity: 0.03 },
+      { from: "2026-03-01T18:17:38Z", to: "2026-03-08T18:17:38Z", ndci: 0.03, ndwi: 0.63, turbidity: 0.06 },
+    ],
   },
 ];
 
@@ -113,7 +165,7 @@ export const alerts: Alert[] = [
   {
     id: "a1",
     areaId: "iskar",
-    areaName: "Язовир Искър",
+    areaName: "Панчаревско езеро",
     severity: "critical",
     title: "Algae bloom risk — elevated chlorophyll",
     index: "NDCI",
@@ -147,7 +199,7 @@ export const alerts: Alert[] = [
   {
     id: "a3",
     areaId: "iskar",
-    areaName: "Язовир Искър",
+    areaName: "Панчаревско езеро",
     severity: "warning",
     title: "Water extent decreasing month-over-month",
     index: "NDWI",

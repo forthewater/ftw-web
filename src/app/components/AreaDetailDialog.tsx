@@ -63,10 +63,10 @@ export function AreaDetailDialog({
         <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/60 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=closed]:fade-out-0" />
         <DialogPrimitive.Content className="fixed inset-0 z-50 bg-background flex flex-col outline-none data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=closed]:fade-out-0">
           <DialogPrimitive.Title className="sr-only">
-            {area.name}
+            {area.waterBodyDetails.name}
           </DialogPrimitive.Title>
           <DialogPrimitive.Description className="sr-only">
-            Detailed map view of {area.name} with sampling station data.
+            Detailed map view of {area.waterBodyDetails.name} with sampling station data.
           </DialogPrimitive.Description>
 
           <header className="border-b px-4 sm:px-6 h-14 flex items-center justify-between gap-3 shrink-0">
@@ -90,7 +90,7 @@ export function AreaDetailDialog({
                   className="truncate"
                   style={{ fontSize: 14, fontWeight: 500 }}
                 >
-                  {area.name}
+                  {area.waterBodyDetails.name}
                 </div>
                 <div
                   className="truncate hidden sm:block"
@@ -198,7 +198,7 @@ export function AreaDetailDialog({
                   color: "var(--muted-foreground)",
                 }}
               >
-                {pins.length} sampling stations · pass {area.lastPass}
+                {pins.length} sampling stations · pass {area.weeklyWaterMetrics.length ? new Date(area.weeklyWaterMetrics[area.weeklyWaterMetrics.length - 1].to).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "—"}
               </div>
             </div>
 
@@ -241,7 +241,7 @@ function MapCanvas({
   const markersRef = useRef<Map<string, L.CircleMarker>>(new Map())
   const haloLayersRef = useRef<L.Circle[]>([])
   const onSelectRef = useRef(onSelect)
-  const key = geometryKey(area)
+  const key = geometryKey(area.waterBodyDetails)
 
   // Keep onSelect ref fresh without triggering map reinit
   useEffect(() => {
@@ -251,7 +251,7 @@ function MapCanvas({
   // Initialise map when area (bbox) or pins change
   useEffect(() => {
     if (!containerRef.current) return
-    const geometryBounds = getGeometryBounds(area)
+    const geometryBounds = getGeometryBounds(area.waterBodyDetails)
     if (!geometryBounds) return
 
     if (mapRef.current) {
@@ -278,9 +278,9 @@ function MapCanvas({
       maxZoom: 19,
     }).addTo(map)
 
-    if (area.polygon?.length && area.polygon.length >= 3) {
+    if (area.waterBodyDetails.polygon?.length && area.waterBodyDetails.polygon.length >= 3) {
       L.polygon(
-        area.polygon.map((point) => [point.lat, point.lon]),
+        area.waterBodyDetails.polygon.map((point) => [point.lat, point.lon]),
         {
           color: BBOX_COLOR,
           weight: 2,
@@ -348,7 +348,7 @@ function MapCanvas({
   useEffect(() => {
     const map = mapRef.current
     if (!map) return
-    const geometryBounds = getGeometryBounds(area)
+    const geometryBounds = getGeometryBounds(area.waterBodyDetails)
     if (!geometryBounds) return
 
     // Remove existing halos
@@ -379,7 +379,7 @@ function MapCanvas({
     })
   }, [overlay, pins, key])
 
-  const geometryBounds = getGeometryBounds(area)
+  const geometryBounds = getGeometryBounds(area.waterBodyDetails)
 
   return (
     <div
@@ -419,7 +419,7 @@ function AreaSummary({
   return (
     <>
       <div>
-        <h2>{area.name}</h2>
+        <h2>{area.waterBodyDetails.name}</h2>
         <div
           style={{
             fontSize: 12,

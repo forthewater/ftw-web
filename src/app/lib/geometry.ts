@@ -26,10 +26,12 @@ export function getGeometryBounds({ bbox, polygon }: Geometry): BBox | null {
 }
 
 export function formatGeometryBounds(area: Area): string {
-  const bounds = getGeometryBounds(area);
+  const bounds = getGeometryBounds(area.waterBodyDetails);
   if (!bounds) return "No geometry";
 
-  const prefix = area.polygon?.length ? `Polygon ${area.polygon.length} pts` : "BBox";
+  const prefix = area.waterBodyDetails.polygon?.length
+    ? `Polygon ${area.waterBodyDetails.polygon.length} pts`
+    : "BBox";
   return `${prefix} · W ${formatCoord(bounds.west)} · S ${formatCoord(bounds.south)} · E ${formatCoord(bounds.east)} · N ${formatCoord(bounds.north)}`;
 }
 
@@ -47,4 +49,9 @@ export function geometryKey({ bbox, polygon }: Geometry): string {
 
 function formatCoord(value: number): string {
   return Number.isInteger(value) ? String(value) : value.toFixed(6);
+}
+
+export function formatPassDate(iso: string | undefined): string {
+  if (!iso) return "—";
+  return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 }

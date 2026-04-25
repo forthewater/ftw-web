@@ -28,8 +28,8 @@ export function AreaDrawer({
   onDelete?: (id: string) => void;
 }) {
   const isNew = !area;
-  const [name, setName] = useState(area?.name ?? "");
-  const [bbox, setBbox] = useState(getGeometryBounds(area ?? {}) ?? DEFAULT_BBOX);
+  const [name, setName] = useState(area?.waterBodyDetails.name ?? "");
+  const [bbox, setBbox] = useState(getGeometryBounds(area?.waterBodyDetails ?? {}) ?? DEFAULT_BBOX);
   const [indices, setIndices] = useState<Idx[]>((area?.indices as Idx[]) ?? ["NDCI", "NDTI", "NDWI"]);
   const [active, setActive] = useState(area?.active ?? true);
   const [notify, setNotify] = useState("email");
@@ -40,8 +40,8 @@ export function AreaDrawer({
 
   useEffect(() => {
     if (open) {
-      setName(area?.name ?? "");
-      setBbox(getGeometryBounds(area ?? {}) ?? DEFAULT_BBOX);
+      setName(area?.waterBodyDetails.name ?? "");
+      setBbox(getGeometryBounds(area?.waterBodyDetails ?? {}) ?? DEFAULT_BBOX);
       setIndices((area?.indices as Idx[]) ?? ["NDCI", "NDTI", "NDWI"]);
       setActive(area?.active ?? true);
       setSaveError(null);
@@ -67,13 +67,15 @@ export function AreaDrawer({
 
     const nextArea: Area = {
       id: area?.id ?? `area-${Date.now()}`,
-      name: name.trim(),
-      bbox,
       active,
-      lastPass: area?.lastPass ?? "—",
-      nextPass: area?.nextPass ?? "—",
       activeAlerts: area?.activeAlerts ?? 0,
       indices,
+      waterBodyDetails: {
+        name: name.trim(),
+        bbox,
+        warning: area?.waterBodyDetails.warning ?? null,
+      },
+      weeklyWaterMetrics: area?.weeklyWaterMetrics ?? [],
     };
 
     try {
@@ -193,7 +195,7 @@ export function AreaDrawer({
             <Button
               variant="ghost"
               onClick={() => {
-                if (confirm(`Delete "${area!.name}"? This removes its history and alerts.`)) {
+                if (confirm(`Delete "${area!.waterBodyDetails.name}"? This removes its history and alerts.`)) {
                   onDelete(area!.id);
                   onOpenChange(false);
                 }

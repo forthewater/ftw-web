@@ -4,6 +4,7 @@ import { Skeleton } from "../components/ui/skeleton"
 import { CheckCircle2 } from "lucide-react"
 import type { Alert, Area } from "../lib/data"
 import { AreaSelector } from "../components/AreaSelector"
+import { formatPassDate } from "../lib/geometry"
 
 const filters = ["All", "Active", "Acknowledged", "Resolved"] as const
 type Filter = (typeof filters)[number]
@@ -47,7 +48,7 @@ export function AlertInbox({
     return a.status === filter.toLowerCase()
   })
 
-  const heading = area ? `Alerts — ${area.name}` : "Alerts — All areas"
+  const heading = area ? `Alerts — ${area.waterBodyDetails.name}` : "Alerts — All areas"
 
   const sorted = [...visible].sort((a, b) => {
     const order = { active: 0, acknowledged: 1, resolved: 2 } as const
@@ -67,8 +68,7 @@ export function AlertInbox({
                 marginTop: 4,
               }}
             >
-              Last satellite pass: {area.lastPass} · Next scheduled pass:{" "}
-              {area.nextPass}
+              Last satellite pass: {formatPassDate(area.weeklyWaterMetrics[area.weeklyWaterMetrics.length - 1]?.to)} · Next scheduled pass: —
             </div>
           )}
         </div>
@@ -130,7 +130,7 @@ export function AlertInbox({
           </div>
           <div style={{ fontSize: 15, fontWeight: 500 }}>No active alerts</div>
           <div style={{ fontSize: 12, color: "var(--muted-foreground)" }}>
-            Last checked {area?.lastPass ?? "Apr 22, 2026"}.
+            Last checked {area ? formatPassDate(area.weeklyWaterMetrics[area.weeklyWaterMetrics.length - 1]?.to) : "Apr 22, 2026"}.
           </div>
         </div>
       ) : (

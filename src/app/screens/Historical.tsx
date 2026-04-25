@@ -9,7 +9,7 @@ import type { Area } from "../lib/data"
 import { useAreas } from "../lib/hooks/useAreas"
 import { useTrend } from "../lib/hooks/useTrend"
 import { AreaSelector } from "../components/AreaSelector"
-import { formatGeometryBounds } from "../lib/geometry"
+import { formatGeometryBounds, formatPassDate } from "../lib/geometry"
 
 export function Historical({
   initialArea,
@@ -43,7 +43,7 @@ export function Historical({
     <div className="px-4 sm:px-6 lg:px-8 py-6 sm:py-8 max-w-[1100px] mx-auto space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
         <div>
-          <h1>{area.name}</h1>
+          <h1>{area.waterBodyDetails.name}</h1>
           <div
             style={{
               color: "var(--muted-foreground)",
@@ -82,9 +82,9 @@ export function Historical({
         />
         <MetricCard
           label="Last / next pass"
-          value={area.lastPass.replace(", 2026", "")}
+          value={formatPassDate(area.weeklyWaterMetrics[area.weeklyWaterMetrics.length - 1]?.to)}
           trend="flat"
-          trendLabel={`Next: ${area.nextPass.replace(", 2026", "")}`}
+          trendLabel="Next: —"
         />
       </div>
 
@@ -134,13 +134,13 @@ export function Historical({
       <div className="border bg-card" style={{ borderRadius: 12, padding: 20 }}>
         <div className="flex items-center justify-between mb-3">
           <h3>Bounding box & latest NDCI overlay</h3>
-          {/* <span style={{ fontSize: 12, color: "var(--muted-foreground)" }}>
-            Last pass: {area.lastPass}
-          </span> */}
+          <span style={{ fontSize: 12, color: "var(--muted-foreground)" }}>
+            Last pass: {formatPassDate(area.weeklyWaterMetrics[area.weeklyWaterMetrics.length - 1]?.to)}
+          </span>
         </div>
         <BBoxMap
-          bbox={area.bbox}
-          polygon={area.polygon}
+          bbox={area.waterBodyDetails.bbox}
+          polygon={area.waterBodyDetails.polygon}
           height={260}
           interactive
         />

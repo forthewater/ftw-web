@@ -88,8 +88,19 @@ export default function App() {
   const [ui, dispatch] = useReducer(uiReducer, initialUI)
   const [activeArea, setActiveArea] = useState<Area | null>(null)
 
-  const { areas, addArea, editArea, deleteArea, toggleArea, loading: areasLoading } = useAreas()
-  const { alerts, acknowledge, loading: alertsLoading } = useAlerts(activeArea?.id)
+  const {
+    areas,
+    addArea,
+    editArea,
+    deleteArea,
+    toggleArea,
+    loading: areasLoading,
+  } = useAreas()
+  const {
+    alerts,
+    acknowledge,
+    loading: alertsLoading,
+  } = useAlerts(activeArea?.id)
 
   const totalActive = useMemo(
     () => alerts.filter((a) => a.status === "active").length,
