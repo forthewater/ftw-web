@@ -1,0 +1,188 @@
+{
+  "areas": [
+    {
+      "id": "iskar",
+      "name": "Язовир Искър",
+      "bbox": { "west": 23.52, "south": 42.40, "east": 23.65, "north": 42.52 },
+      "active": true,
+      "lastPass": "Apr 22, 2026",
+      "nextPass": "Apr 27, 2026",
+      "activeAlerts": 1,
+      "indices": ["NDCI", "NDTI", "NDWI"]
+    },
+    {
+      "id": "varna",
+      "name": "Black Sea Coast — Varna",
+      "bbox": { "west": 27.85, "south": 43.18, "east": 28.05, "north": 43.28 },
+      "active": true,
+      "lastPass": "Apr 21, 2026",
+      "nextPass": "Apr 26, 2026",
+      "activeAlerts": 1,
+      "indices": ["NDCI", "NDTI"]
+    },
+    {
+      "id": "batak",
+      "name": "Язовир Батак",
+      "bbox": { "west": 24.10, "south": 41.92, "east": 24.28, "north": 42.04 },
+      "active": true,
+      "lastPass": "Apr 22, 2026",
+      "nextPass": "Apr 27, 2026",
+      "activeAlerts": 0,
+      "indices": ["NDCI", "NDWI"]
+    },
+    {
+      "id": "kardzhali",
+      "name": "Язовир Кърджали",
+      "bbox": { "west": 25.30, "south": 41.58, "east": 25.48, "north": 41.70 },
+      "active": false,
+      "lastPass": "Mar 10, 2026",
+      "nextPass": "Paused",
+      "activeAlerts": 0,
+      "indices": ["NDCI"]
+    }
+  ],
+  "alerts": [
+    {
+      "id": "a1",
+      "areaId": "iskar",
+      "areaName": "Язовир Искър",
+      "severity": "critical",
+      "title": "Algae bloom risk — elevated chlorophyll",
+      "index": "NDCI",
+      "value": 0.21,
+      "threshold": 0.20,
+      "durationDays": 12,
+      "timestamp": "Apr 22, 09:12",
+      "status": "active",
+      "summary": "Chlorophyll levels have been above the moderate threshold for 12 consecutive satellite passes. This may indicate early-stage algae bloom activity. Water treatment protocols should be reviewed.",
+      "recommendation": "Notify water treatment supervisor and increase chlorophyll sampling frequency."
+    },
+    {
+      "id": "a2",
+      "areaId": "varna",
+      "areaName": "Black Sea Coast — Varna",
+      "severity": "warning",
+      "title": "Turbidity rising above clear-water range",
+      "index": "NDTI",
+      "value": 0.04,
+      "threshold": 0.0,
+      "durationDays": 5,
+      "timestamp": "Apr 21, 17:48",
+      "status": "active",
+      "summary": "Turbidity has crossed the clear-water threshold for 5 consecutive passes. Likely sediment runoff after recent rainfall.",
+      "recommendation": "Cross-reference with rainfall data and downstream intake stations."
+    },
+    {
+      "id": "a3",
+      "areaId": "iskar",
+      "areaName": "Язовир Искър",
+      "severity": "warning",
+      "title": "Water extent decreasing month-over-month",
+      "index": "NDWI",
+      "value": 0.66,
+      "threshold": 0.68,
+      "durationDays": 30,
+      "timestamp": "Apr 18, 11:02",
+      "status": "acknowledged",
+      "acknowledgedBy": "M. Petrova",
+      "acknowledgedAt": "Apr 19, 08:15",
+      "summary": "Reservoir water extent has declined steadily over the past month, consistent with seasonal drawdown.",
+      "recommendation": "Continue monitoring; no immediate action required."
+    },
+    {
+      "id": "a4",
+      "areaId": "batak",
+      "areaName": "Язовир Батак",
+      "severity": "ok",
+      "title": "All indices within normal range",
+      "index": "NDCI",
+      "value": 0.04,
+      "threshold": 0.10,
+      "durationDays": 0,
+      "timestamp": "Mar 18, 08:00",
+      "status": "resolved",
+      "summary": "Routine pass. All indices nominal.",
+      "recommendation": "No action required."
+    }
+  ],
+  "trend": [
+    { "id": "iskar-NDCI-Nov", "areaId": "iskar", "index": "NDCI", "month": "Nov", "value": 0.02, "lastYear": 0.03 },
+    { "id": "iskar-NDCI-Dec", "areaId": "iskar", "index": "NDCI", "month": "Dec", "value": 0.03, "lastYear": 0.04 },
+    { "id": "iskar-NDCI-Jan", "areaId": "iskar", "index": "NDCI", "month": "Jan", "value": 0.04, "lastYear": 0.05 },
+    { "id": "iskar-NDCI-Feb", "areaId": "iskar", "index": "NDCI", "month": "Feb", "value": 0.06, "lastYear": 0.06 },
+    { "id": "iskar-NDCI-Mar", "areaId": "iskar", "index": "NDCI", "month": "Mar", "value": 0.11, "lastYear": 0.08 },
+    { "id": "iskar-NDCI-Apr", "areaId": "iskar", "index": "NDCI", "month": "Apr", "value": 0.21, "lastYear": 0.09 },
+
+    { "id": "iskar-NDTI-Nov", "areaId": "iskar", "index": "NDTI", "month": "Nov", "value": -0.09 },
+    { "id": "iskar-NDTI-Dec", "areaId": "iskar", "index": "NDTI", "month": "Dec", "value": -0.05 },
+    { "id": "iskar-NDTI-Jan", "areaId": "iskar", "index": "NDTI", "month": "Jan", "value": -0.08 },
+    { "id": "iskar-NDTI-Feb", "areaId": "iskar", "index": "NDTI", "month": "Feb", "value": -0.03 },
+    { "id": "iskar-NDTI-Mar", "areaId": "iskar", "index": "NDTI", "month": "Mar", "value": -0.07 },
+    { "id": "iskar-NDTI-Apr", "areaId": "iskar", "index": "NDTI", "month": "Apr", "value": -0.06 },
+
+    { "id": "iskar-NDWI-Nov", "areaId": "iskar", "index": "NDWI", "month": "Nov", "value": 0.70 },
+    { "id": "iskar-NDWI-Dec", "areaId": "iskar", "index": "NDWI", "month": "Dec", "value": 0.71 },
+    { "id": "iskar-NDWI-Jan", "areaId": "iskar", "index": "NDWI", "month": "Jan", "value": 0.70 },
+    { "id": "iskar-NDWI-Feb", "areaId": "iskar", "index": "NDWI", "month": "Feb", "value": 0.69 },
+    { "id": "iskar-NDWI-Mar", "areaId": "iskar", "index": "NDWI", "month": "Mar", "value": 0.68 },
+    { "id": "iskar-NDWI-Apr", "areaId": "iskar", "index": "NDWI", "month": "Apr", "value": 0.66 },
+
+    { "id": "varna-NDCI-Nov", "areaId": "varna", "index": "NDCI", "month": "Nov", "value": 0.01, "lastYear": 0.02 },
+    { "id": "varna-NDCI-Dec", "areaId": "varna", "index": "NDCI", "month": "Dec", "value": 0.02, "lastYear": 0.02 },
+    { "id": "varna-NDCI-Jan", "areaId": "varna", "index": "NDCI", "month": "Jan", "value": 0.02, "lastYear": 0.03 },
+    { "id": "varna-NDCI-Feb", "areaId": "varna", "index": "NDCI", "month": "Feb", "value": 0.03, "lastYear": 0.03 },
+    { "id": "varna-NDCI-Mar", "areaId": "varna", "index": "NDCI", "month": "Mar", "value": 0.05, "lastYear": 0.04 },
+    { "id": "varna-NDCI-Apr", "areaId": "varna", "index": "NDCI", "month": "Apr", "value": 0.08, "lastYear": 0.05 },
+
+    { "id": "varna-NDTI-Nov", "areaId": "varna", "index": "NDTI", "month": "Nov", "value": -0.04 },
+    { "id": "varna-NDTI-Dec", "areaId": "varna", "index": "NDTI", "month": "Dec", "value": -0.03 },
+    { "id": "varna-NDTI-Jan", "areaId": "varna", "index": "NDTI", "month": "Jan", "value": -0.02 },
+    { "id": "varna-NDTI-Feb", "areaId": "varna", "index": "NDTI", "month": "Feb", "value": 0.01 },
+    { "id": "varna-NDTI-Mar", "areaId": "varna", "index": "NDTI", "month": "Mar", "value": 0.02 },
+    { "id": "varna-NDTI-Apr", "areaId": "varna", "index": "NDTI", "month": "Apr", "value": 0.04 },
+
+    { "id": "batak-NDCI-Nov", "areaId": "batak", "index": "NDCI", "month": "Nov", "value": 0.01 },
+    { "id": "batak-NDCI-Dec", "areaId": "batak", "index": "NDCI", "month": "Dec", "value": 0.02 },
+    { "id": "batak-NDCI-Jan", "areaId": "batak", "index": "NDCI", "month": "Jan", "value": 0.02 },
+    { "id": "batak-NDCI-Feb", "areaId": "batak", "index": "NDCI", "month": "Feb", "value": 0.03 },
+    { "id": "batak-NDCI-Mar", "areaId": "batak", "index": "NDCI", "month": "Mar", "value": 0.03 },
+    { "id": "batak-NDCI-Apr", "areaId": "batak", "index": "NDCI", "month": "Apr", "value": 0.04 },
+
+    { "id": "batak-NDWI-Nov", "areaId": "batak", "index": "NDWI", "month": "Nov", "value": 0.75 },
+    { "id": "batak-NDWI-Dec", "areaId": "batak", "index": "NDWI", "month": "Dec", "value": 0.74 },
+    { "id": "batak-NDWI-Jan", "areaId": "batak", "index": "NDWI", "month": "Jan", "value": 0.75 },
+    { "id": "batak-NDWI-Feb", "areaId": "batak", "index": "NDWI", "month": "Feb", "value": 0.73 },
+    { "id": "batak-NDWI-Mar", "areaId": "batak", "index": "NDWI", "month": "Mar", "value": 0.72 },
+    { "id": "batak-NDWI-Apr", "areaId": "batak", "index": "NDWI", "month": "Apr", "value": 0.71 },
+
+    { "id": "kardzhali-NDCI-Nov", "areaId": "kardzhali", "index": "NDCI", "month": "Nov", "value": 0.01 },
+    { "id": "kardzhali-NDCI-Dec", "areaId": "kardzhali", "index": "NDCI", "month": "Dec", "value": 0.01 },
+    { "id": "kardzhali-NDCI-Jan", "areaId": "kardzhali", "index": "NDCI", "month": "Jan", "value": 0.02 },
+    { "id": "kardzhali-NDCI-Feb", "areaId": "kardzhali", "index": "NDCI", "month": "Feb", "value": 0.02 },
+    { "id": "kardzhali-NDCI-Mar", "areaId": "kardzhali", "index": "NDCI", "month": "Mar", "value": 0.02 },
+    { "id": "kardzhali-NDCI-Apr", "areaId": "kardzhali", "index": "NDCI", "month": "Apr", "value": 0.03 }
+  ],
+  "notes": [
+    {
+      "id": 1,
+      "alertId": "a1",
+      "author": "M. Petrova",
+      "timestamp": "Apr 22, 10:04",
+      "body": "Cross-checked with on-site sampling team. They confirm visible green tint near the northern shore. Increasing sampling frequency to daily until values normalize."
+    },
+    {
+      "id": 2,
+      "alertId": "a1",
+      "author": "I. Kolev",
+      "timestamp": "Apr 22, 14:30",
+      "body": "Notified treatment supervisor. Pre-chlorination dose adjusted by +0.2 mg/L."
+    },
+    {
+      "id": 3,
+      "alertId": "a2",
+      "author": "I. Kolev",
+      "timestamp": "Apr 21, 18:05",
+      "body": "Rainfall event confirmed — 28mm over 6 hours upstream. Sediment plume visible in true-colour composite."
+    }
+  ]
+}

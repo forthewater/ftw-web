@@ -1,0 +1,414 @@
+WATER QUALITY MONITOR — MULTI-AREA SATELLITE DASHBOARD
+Design Prompt for Figma Make / Google Stitch
+============================================================
+
+PRODUCT OVERVIEW
+----------------
+An internal web dashboard for monitoring water quality across multiple
+user-defined areas of interest. Each area is defined by a custom bounding
+box (geographic coordinates) that the user sets up. The tool is not
+limited to a single reservoir — users can monitor any water body: lakes,
+reservoirs, rivers, coastal zones, wetlands.
+
+Example default area used in placeholders: Язовир Искър (Iskar Reservoir),
+the primary drinking water source for Sofia, Bulgaria. This is one of
+potentially many monitored areas in a single account.
+
+Backend: Spring (Java). Frontend: Vue or React. Data source: Copernicus
+Sentinel-2 satellite imagery via Sentinel Hub API, updated every 5 days.
+
+The tool is NOT a live monitoring dashboard. Users open it only when an
+alert fires. The primary flow is: receive alert → investigate → export
+a report. Design everything around this flow.
+
+
+PRIMARY USERS
+-------------
+1. Water authority analysts
+   - Technically literate, understand satellite indices (NDCI, NDTI, NDWI)
+   - Need raw numbers, trend charts, and historical comparison
+   - Primary action: investigate the alert, annotate findings
+
+2. Government decision makers
+   - Non-technical, senior staff
+   - Need a clear severity signal and plain-language summary
+   - Primary action: read the summary and export a PDF report to share
+
+
+VISUAL STYLE
+------------
+- Clean, minimal, government/utility aesthetic
+- White backgrounds, flat surfaces, no gradients, no shadows
+- 0.5px borders in light grey
+- Font: system sans-serif (or Inter as fallback)
+- Font weights: 400 (regular) and 500 (medium) only — never bold/700
+- Border radius: 8px for components, 12px for cards
+- Spacing unit: 8px base grid
+
+COLOR SYSTEM
+- Primary blue: #185FA5 (used for key actions, links, info badges)
+- Success green: #3B6D11 (positive trends, OK status)
+- Warning amber: #854F0B (approaching threshold)
+- Danger red: #A32D2D (threshold exceeded, critical alerts)
+- Neutral grey: #888780 (secondary text, borders)
+- Background primary: #FFFFFF
+- Background secondary: #F5F5F3 (metric cards, muted surfaces)
+- All colors must work in both light and dark mode
+
+SEVERITY INDICATORS (used across all screens)
+- Critical: red background #FCEBEB, red text #A32D2D
+- Warning: amber background #FAEEDA, amber text #854F0B
+- OK: green background #EAF3DE, green text #3B6D11
+- Info: blue background #E6F1FB, blue text #185FA5
+
+
+NAVIGATION STRUCTURE
+--------------------
+Top-level navigation (sidebar or top bar):
+1. Alerts          ← DEFAULT landing page
+2. Areas           ← list of all monitored areas + add/edit
+3. Historical view ← scoped to selected area
+4. Settings / thresholds (admin only)
+
+No tabs, no carousels. All content stacks vertically.
+
+Area context switcher:
+- Persistent dropdown or pill in the top bar showing the currently
+  selected area (e.g. "Язовир Искър")
+- Switching area updates all screens: alerts, history, and map
+- "All areas" option shows alerts from every area in one combined inbox
+
+
+SCREEN 1 — ALERT INBOX (default landing page)
+----------------------------------------------
+Purpose: Show all active and recent alerts across all monitored areas,
+or filtered to a single area via the area switcher.
+Users land here from an email or SMS notification link.
+
+Layout:
+- Page title: "Alerts" (with current area name if filtered, e.g.
+  "Alerts — Язовир Искър", or "Alerts — All areas")
+- Subtitle: last satellite pass date + next scheduled pass for
+  the selected area (hidden when "All areas" is selected)
+- Filter row: All / Active / Acknowledged / Resolved (pill toggles)
+- Alert list below (see alert item component)
+
+Alert item component (card, full width):
+- Left edge: 4px colored bar (red = critical, amber = warning, green = ok)
+- Severity badge (Critical / Warning / OK) — top left inside card
+- Area name tag: small pill showing which area this alert belongs to,
+  e.g. "Язовир Искър" or "Black Sea Coast — Varna" — always visible
+  so users in "All areas" view can immediately tell where an alert is from
+- Alert title in 15px medium weight — plain language, e.g.:
+  "Chlorophyll index exceeded moderate threshold"
+- Sub-line in 12px muted: index name + current value + threshold +
+  duration, e.g.: "NDCI 0.21 · threshold 0.20 · active for 12 days"
+- Right side: timestamp + "View details" link + "Acknowledge" button
+- Acknowledged alerts: reduced opacity (0.5), moved to bottom of list,
+  show who acknowledged and when
+
+Empty state: "No active alerts. Last checked [date]." with a green
+checkmark icon.
+
+
+SCREEN 2 — ALERT DETAIL (main working screen)
+----------------------------------------------
+Purpose: Full investigation view for a single alert.
+This is the most important screen — design it first.
+
+The screen must serve BOTH user types simultaneously:
+- Top section: decision maker reads this in 10 seconds
+- Bottom section: analyst digs into data here
+
+DECISION MAKER SECTION (top, always visible above the fold):
+- Large severity badge (Critical / Warning / OK) — prominent, top left
+- Alert title: large (22px), e.g. "Algae bloom risk — elevated chlorophyll"
+- Plain language summary paragraph (2-3 sentences), e.g.:
+  "Chlorophyll levels have been above the moderate threshold for 12
+  consecutive satellite passes. This may indicate early-stage algae bloom
+  activity. Water treatment protocols should be reviewed."
+- Visual severity meter: horizontal bar showing current value vs threshold
+  (e.g. NDCI 0.21 of 0.20 threshold, shown as a filled bar with a
+  threshold marker line)
+- Recommended action box: light background, e.g.
+  "Recommended: Notify water treatment supervisor and increase
+  chlorophyll sampling frequency."
+- "Export report" button: prominent, top right, always visible,
+  primary blue, label "Export report"
+- "Acknowledge" button: secondary, next to export
+
+ANALYST SECTION (below, scrollable):
+Organized into tabs or clearly labeled sections:
+
+  A) Trend chart
+     - Line chart of the triggered index (e.g. NDCI) over the past
+       6 months
+     - Dashed threshold lines: orange at moderate (0.1), red at high (0.2)
+     - Shaded area under the line
+     - X-axis: monthly labels. Y-axis: index value 0.0 to 0.30
+     - Below the chart: comparison line for same period last year
+       (dashed, lighter color)
+
+  B) Satellite image
+     - 512x512px rendered image of the reservoir from the alert date
+     - NDCI color overlay applied (blue = clean, teal = low, yellow =
+       moderate, red = high algae risk)
+     - Caption: satellite pass date, cloud coverage percentage, image source
+     - Small legend: blue / teal / yellow / red with value ranges
+
+  C) Raw data table
+     - Columns: Date | NDCI | NDTI | NDWI | Cloud cover % | Status
+     - Last 10 satellite passes
+     - Rows with values exceeding threshold highlighted in red tint
+     - Sortable columns
+
+  D) Notes
+     - Analyst can add a freetext note to the alert record
+     - Notes saved with author name and timestamp
+     - Previous notes shown as a thread (chronological, oldest first)
+     - Placeholder: "Add investigation notes..."
+
+
+SCREEN 3 — EXPORT / REPORT GENERATOR
+--------------------------------------
+Purpose: Generate a structured report from the alert detail.
+Triggered by the "Export report" button.
+
+Show as a modal or a side panel (not a new page).
+
+Two export types shown as two clear options (card selection):
+
+  OPTION A — Analyst export
+  - Format: CSV
+  - Contents: all raw index values (NDCI, NDTI, NDWI) for the selected
+    date range, with metadata (date, cloud cover, satellite pass ID)
+  - Label: "Raw data export"
+  - Sub-label: "For further analysis in Excel or Python"
+
+  OPTION B — Decision maker report
+  - Format: PDF
+  - Contents: plain-language summary, severity rating, trend chart,
+    current value vs threshold, recommended actions, generated date,
+    analyst signature field
+  - Label: "Summary report"
+  - Sub-label: "For sharing with supervisors or external stakeholders"
+
+Below the two options:
+- Date range selector (default: last 6 months)
+- Index selector: All indices / NDCI only / NDTI only / NDWI only
+- "Generate" button (primary blue)
+
+After generating: show a download confirmation with file name and size.
+
+
+SCREEN 4 — HISTORICAL OVERVIEW (secondary)
+-------------------------------------------
+Purpose: Browse historical data outside of an active alert context,
+scoped to a single selected area.
+Accessed via "Historical view" in the navigation. Not the home page.
+
+Area selector at the top of this screen (dropdown, required) — user must
+select which area to view before charts load.
+
+Layout:
+- Area name as page heading, with coordinates shown as subtitle in
+  muted text, e.g. "Язовир Искър · 42.40–42.52N, 23.52–23.65E"
+- 4 metric cards at top (2 columns on desktop):
+    NDCI current value + trend arrow
+    NDTI current value + trend arrow
+    Water extent percentage + trend arrow
+    Last satellite pass date + next pass date
+
+- NDCI chart: line chart, 6-month default, same style as alert detail
+- NDTI chart: bar chart, green bars for negative (clear), red for positive
+  (turbid), dashed zero line
+- Area map placeholder: shows the user-defined bounding box rendered on
+  a map, labeled with coordinates, NDCI overlay label, last pass date.
+  Note: full Leaflet.js interactive map in production
+- Export row at bottom: same CSV/PDF options as export modal
+
+
+SCREEN 5 — AREA MANAGEMENT
+----------------------------
+Purpose: Let users create, view, edit, and delete monitored areas.
+Each area is a named bounding box that gets its own alert rules,
+satellite data fetches, and history.
+Accessed via "Areas" in the navigation.
+
+AREA LIST VIEW:
+- Page title: "Monitored areas"
+- "Add area" button — top right, primary blue
+- Each area shown as a card in a 2-column grid:
+    - Area name (editable)
+    - Bounding box coordinates: west, south, east, north
+    - Small static map thumbnail showing the bbox location on a world map
+    - Number of active alerts badge (red if > 0, grey if 0)
+    - Last satellite pass date
+    - Status toggle: Active / Paused (paused areas skip data fetches)
+    - "Edit" and "Delete" action buttons — Edit opens inline or modal,
+      Delete shows a confirmation dialog before removing
+
+AREA DETAIL / ADD AREA MODAL OR DRAWER:
+Triggered by "Add area" or "Edit" on an existing area.
+Show as a side drawer (slides in from the right, not a full page).
+
+Fields:
+  - Area name (text input, required)
+    Placeholder: e.g. "Язовир Искър", "Black Sea Coast — Varna"
+
+  - Bounding box (4 numeric inputs in a 2x2 grid):
+      West longitude  |  East longitude
+      South latitude  |  North latitude
+    All values in decimal degrees (e.g. 23.52, 42.40)
+    Validation: west < east, south < north, all within -180/180 and -90/90
+    Helper text below inputs: "Tip: use Google Maps to find coordinates.
+    Right-click any point on the map to copy its latitude and longitude."
+
+  - Map preview (below the coordinate inputs):
+    A small interactive map (Leaflet.js) that draws the bounding box
+    rectangle in real time as the user types coordinates.
+    The user can also drag the corners of the rectangle on the map to
+    adjust the bbox instead of typing numbers.
+    The map updates the numeric inputs when dragged.
+
+  - Indices to monitor (multi-select checkboxes):
+      [x] NDCI — chlorophyll / algae
+      [x] NDTI — turbidity
+      [x] NDWI — water extent
+    At least one must be selected.
+
+  - Alert thresholds (shown per selected index):
+    For each selected index, two inputs:
+      Warning threshold  |  Critical threshold
+    Pre-filled with sensible defaults (NDCI: 0.10 / 0.20, etc.)
+
+  - Notification settings:
+      Notification method: Email / SMS / Both (radio)
+      Recipients: text input (comma-separated emails or phone numbers)
+      Consecutive passes before alert fires: number input (default: 2)
+
+  - Status: Active / Paused toggle (default: Active)
+
+Drawer footer:
+  - "Save area" button (primary blue) — validates all fields before saving
+  - "Cancel" button (secondary) — discards and closes drawer
+  - For existing areas: "Delete area" link in red, far left of footer,
+    triggers a confirmation dialog before deleting
+
+
+METRIC CARD COMPONENT (reused across screens)
+---------------------------------------------
+- Background: #F5F5F3 (secondary)
+- Border radius: 8px
+- Padding: 12px 14px
+- Label: 11px, uppercase, letter-spacing 0.04em, muted color
+- Value: 22px, weight 500, primary text color
+- Trend line: 11px, green if improving, red if worsening
+- No border, no shadow
+
+
+ALERT STATUS WORKFLOW
+---------------------
+States an alert can be in:
+1. Active — red/amber, unread, shown at top of inbox
+2. Acknowledged — analyst has flagged it as being investigated,
+   shown with name + timestamp of who acknowledged
+3. Resolved — manually closed, moved to resolved filter
+   (no auto-resolution — always requires human action)
+
+Transitions:
+Active → Acknowledged (button on alert item or detail)
+Acknowledged → Resolved (button on alert detail only)
+Resolved alerts cannot be reopened (append a new alert instead)
+
+
+ALERT THRESHOLD CONFIGURATION (settings screen, admin only)
+-------------------------------------------------------------
+Thresholds are configured per area (set during area creation or editing
+in Screen 5). The global settings screen is for system-wide defaults
+that pre-fill the threshold inputs when a new area is created.
+
+Global defaults table:
+- Index (NDCI / NDTI / NDWI)
+- Default warning threshold
+- Default critical threshold
+- Default consecutive passes before alert fires
+- Default notification method (email / SMS / both)
+
+Save button at bottom. Changes apply to new areas only — existing
+per-area thresholds are not overwritten.
+
+
+SATELLITE DATA CONTEXT (for realistic placeholder content)
+----------------------------------------------------------
+- Satellite: Sentinel-2 L2A
+- Revisit frequency: every 5 days
+- Image resolution: 512x512px, 10-20m per pixel
+
+Example area used in placeholders:
+  Name: Язовир Искър (Iskar Reservoir)
+  Bounding box: west 23.52, south 42.40, east 23.65, north 42.52
+  Center: 42.4578N, 23.5847E
+
+Key indices used:
+- NDCI (Normalized Difference Chlorophyll Index)
+  Formula: (B05 - B04) / (B05 + B04)
+  Range: -1 to +1. Warning: >0.10. Critical: >0.20.
+  Color scale: blue (clean) → teal → yellow → red (algae)
+
+- NDTI (Normalized Difference Turbidity Index)
+  Formula: (B04 - B03) / (B04 + B03)
+  Range: -1 to +1. Clear water: < -0.05. Turbid: > 0.0.
+  Color scale: blue (clear) → brown (turbid)
+
+- NDWI (Normalized Difference Water Index)
+  Formula: (B03 - B08) / (B03 + B08)
+  Used for water extent tracking. Declining values = reservoir shrinking.
+
+Sample realistic data for placeholder charts (6 months):
+Nov: NDCI 0.02, NDTI -0.09, NDWI 0.71
+Dec: NDCI 0.03, NDTI -0.05, NDWI 0.70
+Jan: NDCI 0.04, NDTI -0.08, NDWI 0.69
+Feb: NDCI 0.06, NDTI -0.03, NDWI 0.68
+Mar: NDCI 0.11, NDTI -0.07, NDWI 0.67
+Apr: NDCI 0.21, NDTI -0.06, NDWI 0.66  ← alert triggered
+
+
+RESPONSIVE BEHAVIOR
+-------------------
+- Desktop first (internal tool, primarily used on workstation monitors)
+- Minimum supported width: 1024px
+- Sidebar navigation collapses to top bar below 1280px
+- Charts reflow to full width on narrower viewports
+- Export modal is centered, max-width 560px
+
+
+WHAT NOT TO DO
+--------------
+- No gradients, no drop shadows, no glow effects
+- No dark backgrounds on outer containers
+- No rounded corners on single-sided borders
+- No ALL CAPS text (use sentence case everywhere)
+- No emoji in UI (use CSS shapes or SVG icons)
+- No date pickers or filter controls on the alert detail screen
+  (users should not have to configure anything to understand an alert)
+- Do not make the historical overview the home/landing page
+- Do not bury the export button in a menu or dropdown
+- Do not use color alone to convey meaning (pair with label or icon)
+
+
+DELIVERABLES EXPECTED FROM THE DESIGN TOOL
+-------------------------------------------
+1. Screen 2 (Alert detail) — highest priority, design first
+2. Screen 1 (Alert inbox) — with area name tag on each alert item
+3. Screen 5 (Area management — list + add/edit drawer)
+4. Screen 3 (Export modal)
+5. Screen 4 (Historical overview)
+6. Component library: alert item, metric card, severity badge,
+   threshold meter, nav bar with area switcher, export modal,
+   area card, bbox coordinate input group, map preview widget,
+   add/edit area drawer
+7. Light mode and dark mode variants
+
+============================================================
+END OF PROMPT

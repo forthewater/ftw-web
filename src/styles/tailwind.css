@@ -1,0 +1,17 @@
+@import 'tailwindcss' source(none);
+@source '../**/*.{js,ts,jsx,tsx}';
+
+@import 'tw-animate-css';
+
+@layer utilities {
+  .text-severity-critical { color: var(--severity-critical); }
+  .text-severity-warning  { color: var(--severity-warning);  }
+  .text-severity-ok       { color: var(--severity-ok);       }
+  .text-severity-info     { color: var(--severity-info);     }
+  .text-muted             { color: var(--muted-foreground);  }
+
+  .bg-severity-critical   { background-color: var(--severity-critical-bg); }
+  .bg-severity-warning    { background-color: var(--severity-warning-bg);  }
+  .bg-severity-ok         { background-color: var(--severity-ok-bg);       }
+  .bg-severity-info       { background-color: var(--severity-info-bg);     }
+}
