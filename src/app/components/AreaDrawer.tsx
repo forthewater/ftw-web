@@ -6,13 +6,28 @@ import { Label } from "./ui/label";
 import { Checkbox } from "./ui/checkbox";
 import { Switch } from "./ui/switch";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
-import { BBoxMap } from "./BBoxMap";
 import { INDICES, DEFAULT_THRESHOLDS, INDEX_DESCRIPTIONS, type Index, type Area } from "../lib/data";
 import { getGeometryBounds } from "../lib/geometry";
 
 type Idx = Index;
 
-const DEFAULT_BBOX = { west: 23.52, south: 42.40, east: 23.65, north: 42.52 };
+const DEFAULT_POINT = { lat: 42.4833, lon: 23.5517 };
+const POINT_BBOX_PADDING = 0.001;
+
+function getPointFromArea(area: Area | null) {
+  const lat = area?.waterBodyDetails.lat;
+  const lon = area?.waterBodyDetails.lon;
+  if (typeof lat === "number" && Number.isFinite(lat) && typeof lon === "number" && Number.isFinite(lon)) {
+    return { lat, lon };
+  }
+
+  const bounds = getGeometryBounds(area?.waterBodyDetails ?? {});
+  if (!bounds) return DEFAULT_POINT;
+  return {
+    lat: (bounds.south + bounds.north) / 2,
+    lon: (bounds.west + bounds.east) / 2,
+  };
+}
 
 export function AreaDrawer({
   open,
@@ -29,7 +44,7 @@ export function AreaDrawer({
 }) {
   const isNew = !area;
   const [name, setName] = useState(area?.waterBodyDetails.name ?? "");
-  const [bbox, setBbox] = useState(getGeometryBounds(area?.waterBodyDetails ?? {}) ?? DEFAULT_BBOX);
+  const [point, setPoint] = useState(getPointFromArea(area));
   const [indices, setIndices] = useState<Idx[]>((area?.indices as Idx[]) ?? ["NDCI", "NDTI", "NDWI"]);
   const [active, setActive] = useState(area?.active ?? true);
   const [notify, setNotify] = useState("email");
@@ -41,7 +56,7 @@ export function AreaDrawer({
   useEffect(() => {
     if (open) {
       setName(area?.waterBodyDetails.name ?? "");
-      setBbox(getGeometryBounds(area?.waterBodyDetails ?? {}) ?? DEFAULT_BBOX);
+      setPoint(getPointFromArea(area));
       setIndices((area?.indices as Idx[]) ?? ["NDCI", "NDTI", "NDWI"]);
       setActive(area?.active ?? true);
       setSaveError(null);
@@ -51,10 +66,10 @@ export function AreaDrawer({
 
   const valid =
     name.trim().length > 0 &&
-    bbox.west < bbox.east &&
-    bbox.south < bbox.north &&
-    bbox.west >= -180 && bbox.east <= 180 &&
-    bbox.south >= -90 && bbox.north <= 90 &&
+    Number.isFinite(point.lat) &&
+    Number.isFinite(point.lon) &&
+    point.lat >= -90 && point.lat <= 90 &&
+    point.lon >= -180 && point.lon <= 180 &&
     indices.length > 0;
 
   const toggleIndex = (i: Idx) =>
@@ -65,6 +80,13 @@ export function AreaDrawer({
     setSaving(true);
     setSaveError(null);
 
+    const bbox = {
+      west: point.lon - POINT_BBOX_PADDING,
+      south: point.lat - POINT_BBOX_PADDING,
+      east: point.lon + POINT_BBOX_PADDING,
+      north: point.lat + POINT_BBOX_PADDING,
+    };
+
     const nextArea: Area = {
       id: area?.id ?? `area-${Date.now()}`,
       active,
@@ -72,6 +94,8 @@ export function AreaDrawer({
       indices,
       waterBodyDetails: {
         name: name.trim(),
+        lat: point.lat,
+        lon: point.lon,
         bbox,
         warning: area?.waterBodyDetails.warning ?? null,
       },
@@ -96,7 +120,7 @@ export function AreaDrawer({
             {isNew ? "Add monitored area" : "Edit area"}
           </SheetTitle>
           <SheetDescription>
-            Define a bounding box and the indices you want monitored. Alerts are evaluated after each Sentinel-2 pass.
+            Define a location point and the indices you want monitored. Alerts are evaluated after each Sentinel-2 pass.
           </SheetDescription>
         </SheetHeader>
 
@@ -112,18 +136,13 @@ export function AreaDrawer({
           )}
 
           <div>
-            <Label>Bounding box (decimal degrees)</Label>
+            <Label>Location point (decimal degrees)</Label>
             <div className="grid grid-cols-2 gap-2 mt-2">
-              <CoordInput label="West longitude" value={bbox.west} onChange={(v) => setBbox({ ...bbox, west: v })} />
-              <CoordInput label="East longitude" value={bbox.east} onChange={(v) => setBbox({ ...bbox, east: v })} />
-              <CoordInput label="South latitude" value={bbox.south} onChange={(v) => setBbox({ ...bbox, south: v })} />
-              <CoordInput label="North latitude" value={bbox.north} onChange={(v) => setBbox({ ...bbox, north: v })} />
+              <CoordInput label="Latitude" value={point.lat} onChange={(v) => setPoint((prev) => ({ ...prev, lat: v }))} />
+              <CoordInput label="Longitude" value={point.lon} onChange={(v) => setPoint((prev) => ({ ...prev, lon: v }))} />
             </div>
             <div style={{ fontSize: 11, color: "var(--muted-foreground)", marginTop: 6 }}>
-              Tip: use Google Maps to find coordinates. Right-click any point on the map to copy its latitude and longitude.
-            </div>
-            <div className="mt-3">
-              <BBoxMap bbox={bbox} caption={`west ${bbox.west} · south ${bbox.south} · east ${bbox.east} · north ${bbox.north}`} />
+              Enter the exact point you want to track; this point is used for backend outline lookup.
             </div>
           </div>
 

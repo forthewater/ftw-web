@@ -415,6 +415,9 @@ function AreaSummary({
     (acc, p) => ({ ...acc, [p.severity]: (acc[p.severity] ?? 0) + 1 }),
     { critical: 0, warning: 0, ok: 0, info: 0 },
   )
+  const indicesLabel = Array.isArray(area.indices) && area.indices.length
+    ? area.indices.join(" · ")
+    : "none"
 
   return (
     <>
@@ -428,7 +431,7 @@ function AreaSummary({
           }}
         >
           {area.active ? "Active monitoring" : "Paused"} · {pins.length}{" "}
-          stations · indices {area.indices.join(" · ")}
+          stations · indices {indicesLabel}
         </div>
       </div>
 

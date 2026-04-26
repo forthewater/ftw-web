@@ -24,6 +24,8 @@ export type PolygonPoint = {
 
 export type WaterBodyDetails = {
   name: string;
+  lat?: number;
+  lon?: number;
   bbox?: BBox;
   polygon?: PolygonPoint[];
   warning?: string | null;
