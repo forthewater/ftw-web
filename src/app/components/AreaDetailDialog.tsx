@@ -11,6 +11,7 @@ import type { Area, Alert, Pin } from "../lib/data"
 import { trendNDCI } from "../lib/data"
 import { usePins } from "../lib/hooks/usePins"
 import { formatGeometryBounds, geometryKey, getGeometryBounds } from "../lib/geometry"
+import { EcologySection } from "./EcologySection"
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -144,7 +145,7 @@ export function AreaDetailDialog({
                     onClear={() => setSelected(null)}
                   />
                 ) : (
-                  <AreaSummary area={area} alerts={areaAlerts} />
+                  <AreaSummary area={area} alerts={areaAlerts} pins={pins} />
                 )}
               </div>
             </aside>
@@ -293,20 +294,15 @@ function MapCanvas({
 function AreaSummary({
   area,
   alerts,
+  pins,
 }: {
   area: Area
   alerts: Alert[]
+  pins: Pin[]
 }) {
-  const wm = area.weeklyWaterMetrics
-  const lastWm = wm[wm.length - 1] ?? null
-  const prevWm = wm[wm.length - 2] ?? null
-  const ndciDelta = lastWm && prevWm ? lastWm.ndci - prevWm.ndci : null
-  const turbDelta = lastWm && prevWm ? lastWm.turbidity - prevWm.turbidity : null
-  const ndwiDelta = lastWm && prevWm ? lastWm.ndwi - prevWm.ndwi : null
-  const ndciChartData = wm.map((m) => ({
-    month: new Date(m.to).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
-    value: m.ndci,
-  }))
+  const indicesLabel = Array.isArray(area.indices) && area.indices.length
+    ? area.indices.join(" · ")
+    : "none"
 
   return (
     <>
@@ -319,44 +315,9 @@ function AreaSummary({
             marginTop: 2,
           }}
         >
-          {lastWm
-            ? `Last satellite pass · ${new Date(lastWm.from).toLocaleDateString("en-US", { month: "short", day: "numeric" })}–${new Date(lastWm.to).toLocaleDateString("en-US", { month: "short", day: "numeric" })}`
-            : "No satellite data"}
+          {area.active ? "Active monitoring" : "Paused"} · {pins.length}{" "}
+          stations · indices {indicesLabel}
         </div>
-      </div>
-
-      {lastWm && (
-        <div className="grid grid-cols-3 gap-2">
-          <MetricCard
-            label="NDCI"
-            description="Algae & chlorophyll"
-            value={lastWm.ndci.toFixed(3)}
-            trend={ndciDelta === null ? "flat" : ndciDelta > 0 ? "up" : ndciDelta < 0 ? "down" : "flat"}
-            trendLabel={ndciDelta !== null ? `${ndciDelta >= 0 ? "+" : ""}${ndciDelta.toFixed(3)} wow` : ""}
-            improving={ndciDelta !== null && ndciDelta <= 0}
-          />
-          <MetricCard
-            label="Turbidity"
-            description="Water clarity"
-            value={lastWm.turbidity.toFixed(3)}
-            trend={turbDelta === null ? "flat" : turbDelta > 0 ? "up" : turbDelta < 0 ? "down" : "flat"}
-            trendLabel={turbDelta !== null ? `${turbDelta >= 0 ? "+" : ""}${turbDelta.toFixed(3)} wow` : ""}
-            improving={turbDelta !== null && turbDelta <= 0}
-          />
-          <MetricCard
-            label="NDWI"
-            description="Water extent"
-            value={lastWm.ndwi.toFixed(3)}
-            trend={ndwiDelta === null ? "flat" : ndwiDelta > 0 ? "up" : ndwiDelta < 0 ? "down" : "flat"}
-            trendLabel={ndwiDelta !== null ? `${ndwiDelta >= 0 ? "+" : ""}${ndwiDelta.toFixed(3)} wow` : ""}
-            improving={ndwiDelta !== null && ndwiDelta >= 0}
-          />
-        </div>
-      )}
-
-      <div>
-        <h3>NDCI · {wm.length}-week trend</h3>
-        <TrendChart data={ndciChartData} warning={0.1} critical={0.2} />
       </div>
 
       <div>
@@ -392,6 +353,8 @@ function AreaSummary({
           </div>
         )}
       </div>
+
+      <EcologySection areaId={area.id} />
     </>
   )
 }

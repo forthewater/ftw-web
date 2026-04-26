@@ -24,6 +24,8 @@ export type PolygonPoint = {
 
 export type WaterBodyDetails = {
   name: string;
+  lat?: number;
+  lon?: number;
   bbox?: BBox;
   polygon?: PolygonPoint[];
   warning?: string | null;
@@ -301,3 +303,47 @@ export const notes = [
     body: "Notified treatment supervisor. Pre-chlorination dose adjusted by +0.2 mg/L.",
   },
 ];
+
+// ── In-situ ecology metrics (mock-only until API supports /ecology) ────────────
+
+export type DaphniaState = "good" | "stressed" | "critical"
+
+export type EcologyMetric = {
+  week: string
+  temperatureC: number
+  dissolvedOxygenMgL: number
+  daphniaHealth: DaphniaState
+}
+
+export const mockEcologyMetrics: Record<string, EcologyMetric[]> = {
+  iskar: [
+    { week: "2026-02-23", temperatureC: 4.8,  dissolvedOxygenMgL: 11.2, daphniaHealth: "good" },
+    { week: "2026-03-02", temperatureC: 5.4,  dissolvedOxygenMgL: 10.9, daphniaHealth: "good" },
+    { week: "2026-03-09", temperatureC: 6.1,  dissolvedOxygenMgL: 10.5, daphniaHealth: "good" },
+    { week: "2026-03-16", temperatureC: 7.3,  dissolvedOxygenMgL: 10.1, daphniaHealth: "good" },
+    { week: "2026-03-23", temperatureC: 8.9,  dissolvedOxygenMgL:  9.4, daphniaHealth: "good" },
+    { week: "2026-03-30", temperatureC: 10.2, dissolvedOxygenMgL:  8.8, daphniaHealth: "stressed" },
+    { week: "2026-04-06", temperatureC: 11.8, dissolvedOxygenMgL:  8.1, daphniaHealth: "stressed" },
+    { week: "2026-04-13", temperatureC: 13.1, dissolvedOxygenMgL:  7.3, daphniaHealth: "critical" },
+    { week: "2026-04-20", temperatureC: 14.2, dissolvedOxygenMgL:  6.8, daphniaHealth: "critical" },
+  ],
+  varna: [
+    { week: "2026-03-23", temperatureC: 8.2,  dissolvedOxygenMgL:  9.8, daphniaHealth: "good" },
+    { week: "2026-03-30", temperatureC: 9.5,  dissolvedOxygenMgL:  9.1, daphniaHealth: "stressed" },
+    { week: "2026-04-06", temperatureC: 11.1, dissolvedOxygenMgL:  8.5, daphniaHealth: "stressed" },
+    { week: "2026-04-13", temperatureC: 13.4, dissolvedOxygenMgL:  7.8, daphniaHealth: "good" },
+    { week: "2026-04-20", temperatureC: 15.6, dissolvedOxygenMgL:  7.0, daphniaHealth: "good" },
+  ],
+  batak: [
+    { week: "2026-03-23", temperatureC: 5.2,  dissolvedOxygenMgL: 11.0, daphniaHealth: "good" },
+    { week: "2026-03-30", temperatureC: 6.0,  dissolvedOxygenMgL: 10.6, daphniaHealth: "good" },
+    { week: "2026-04-06", temperatureC: 7.1,  dissolvedOxygenMgL: 10.1, daphniaHealth: "good" },
+    { week: "2026-04-13", temperatureC: 8.5,  dissolvedOxygenMgL:  9.7, daphniaHealth: "good" },
+    { week: "2026-04-20", temperatureC: 9.8,  dissolvedOxygenMgL:  9.2, daphniaHealth: "good" },
+  ],
+  kardzhali: [
+    { week: "2026-02-16", temperatureC: 5.9,  dissolvedOxygenMgL: 10.8, daphniaHealth: "good" },
+    { week: "2026-02-23", temperatureC: 6.5,  dissolvedOxygenMgL: 10.3, daphniaHealth: "good" },
+    { week: "2026-03-02", temperatureC: 7.8,  dissolvedOxygenMgL:  9.7, daphniaHealth: "stressed" },
+  ],
+}
