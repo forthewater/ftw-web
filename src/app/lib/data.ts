@@ -59,6 +59,15 @@ export type Pin = {
   ndwi: number;
   severity: Severity;
   lastReading: string;
+  // Physical sensor readings
+  temperature?: number;
+  ph?: number;
+  // Motion / behaviour metrics
+  activity?: number;
+  speedPxS?: number;
+  immobility?: number;
+  dispersionPx?: number;
+  anomalyScore?: number;
 };
 
 export type Alert = {

@@ -66,7 +66,7 @@ export function AreaDetailDialog({
             {area.waterBodyDetails.name}
           </DialogPrimitive.Title>
           <DialogPrimitive.Description className="sr-only">
-            Detailed map view of {area.waterBodyDetails.name} with sampling station data.
+            Detailed map view of {area.waterBodyDetails.name} with sensor node data.
           </DialogPrimitive.Description>
 
           <header className="border-b px-4 sm:px-6 h-14 flex items-center justify-between gap-3 shrink-0">
@@ -198,7 +198,7 @@ export function AreaDetailDialog({
                   color: "var(--muted-foreground)",
                 }}
               >
-                {pins.length} sampling stations · pass {area.weeklyWaterMetrics.length ? new Date(area.weeklyWaterMetrics[area.weeklyWaterMetrics.length - 1].to).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "—"}
+                {pins.length} sensor nodes · pass {area.weeklyWaterMetrics.length ? new Date(area.weeklyWaterMetrics[area.weeklyWaterMetrics.length - 1].to).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "—"}
               </div>
             </div>
 
@@ -431,7 +431,7 @@ function AreaSummary({
           }}
         >
           {area.active ? "Active monitoring" : "Paused"} · {pins.length}{" "}
-          stations · indices {indicesLabel}
+          sensor nodes · indices {indicesLabel}
         </div>
       </div>
 
@@ -440,7 +440,7 @@ function AreaSummary({
           label="Avg NDCI"
           value={avgNDCI.toFixed(2)}
           trend="up"
-          trendLabel="across stations"
+          trendLabel="across sensor nodes"
         />
         <MetricCard
           label="Active alerts"
@@ -450,7 +450,7 @@ function AreaSummary({
         />
         {worst && (
           <MetricCard
-            label="Worst station"
+            label="Highest NDCI node"
             value={worst.name}
             trend="up"
             trendLabel={`NDCI ${worst.ndci.toFixed(2)}`}
@@ -462,7 +462,7 @@ function AreaSummary({
       <div className="border" style={{ borderRadius: 8, padding: 12 }}>
         <div className="flex items-center gap-2 mb-3">
           <Activity size={14} />
-          <h3 style={{ marginBottom: 0 }}>Station status</h3>
+          <h3 style={{ marginBottom: 0 }}>Sensor node status</h3>
         </div>
         <div className="space-y-1.5" style={{ fontSize: 12 }}>
           <StatusRow
@@ -524,8 +524,11 @@ function AreaSummary({
 // ── PinDetail ─────────────────────────────────────────────────────────────────
 
 function PinDetail({ pin, onClear }: { pin: Pin; onClear: () => void }) {
+  const hasAnomaly = (pin.anomalyScore ?? 0) > 0 || (pin.immobility ?? 0) >= 0.9
+
   return (
     <>
+      {/* Header */}
       <div className="flex items-start justify-between gap-3">
         <div>
           <SeverityBadge severity={pin.severity} />
@@ -546,65 +549,169 @@ function PinDetail({ pin, onClear }: { pin: Pin; onClear: () => void }) {
         </Button>
       </div>
 
-      <div className="grid grid-cols-3 gap-2">
-        <MetricCard
-          label="NDCI"
-          value={pin.ndci.toFixed(2)}
-          trend={pin.ndci > 0.2 ? "up" : "flat"}
-          trendLabel={
-            pin.ndci > 0.2
-              ? "above critical"
-              : pin.ndci > 0.1
-                ? "above warning"
-                : "normal"
-          }
-          improving={pin.ndci <= 0.1}
-        />
-        <MetricCard
-          label="NDTI"
-          value={pin.ndti.toFixed(2)}
-          trend="flat"
-          trendLabel="clear"
-        />
-        <MetricCard
-          label="NDWI"
-          value={pin.ndwi.toFixed(2)}
-          trend="down"
-          trendLabel="-1% mom"
-          improving={false}
-        />
+      {/* Spectral indices */}
+      <div>
+        <SectionLabel>Spectral indices</SectionLabel>
+        <div className="grid grid-cols-3 gap-2 mt-2">
+          <MetricCard
+            label="NDCI"
+            value={pin.ndci.toFixed(2)}
+            trend={pin.ndci > 0.2 ? "up" : "flat"}
+            trendLabel={
+              pin.ndci > 0.2
+                ? "above critical"
+                : pin.ndci > 0.1
+                  ? "above warning"
+                  : "normal"
+            }
+            improving={pin.ndci <= 0.1}
+          />
+          <MetricCard
+            label="NDTI"
+            value={pin.ndti.toFixed(2)}
+            trend="flat"
+            trendLabel="turbidity"
+          />
+          <MetricCard
+            label="NDWI"
+            value={pin.ndwi.toFixed(2)}
+            trend="flat"
+            trendLabel="water extent"
+          />
+        </div>
       </div>
 
-      <div className="border" style={{ borderRadius: 8, padding: 12 }}>
-        <div
-          style={{
-            fontSize: 11,
-            textTransform: "uppercase",
-            letterSpacing: "0.04em",
-            color: "var(--muted-foreground)",
-            fontWeight: 500,
-            marginBottom: 6,
-          }}
-        >
-          Latest reading
+      {/* Physical readings */}
+      {(pin.temperature !== undefined || pin.ph !== undefined) && (
+        <div>
+          <SectionLabel>Physical readings</SectionLabel>
+          <div className="grid grid-cols-2 gap-2 mt-2">
+            {pin.temperature !== undefined && (
+              <MetricCard
+                label="Temperature"
+                value={`${pin.temperature.toFixed(1)} °C`}
+                trend="flat"
+                trendLabel="in-situ"
+              />
+            )}
+            {pin.ph !== undefined && (
+              <MetricCard
+                label="pH"
+                value={pin.ph.toFixed(2)}
+                trend={pin.ph < 6.5 || pin.ph > 9 ? "up" : "flat"}
+                trendLabel={pin.ph < 6.5 ? "acidic" : pin.ph > 9 ? "alkaline" : "normal"}
+                improving={pin.ph >= 6.5 && pin.ph <= 9}
+              />
+            )}
+          </div>
         </div>
-        <div style={{ fontSize: 13 }}>{pin.lastReading}</div>
+      )}
+
+      {/* Motion / behaviour */}
+      {(pin.activity !== undefined ||
+        pin.speedPxS !== undefined ||
+        pin.immobility !== undefined ||
+        pin.dispersionPx !== undefined) && (
+        <div>
+          <SectionLabel>Motion &amp; behaviour</SectionLabel>
+          <div className="grid grid-cols-2 gap-2 mt-2">
+            {pin.activity !== undefined && (
+              <MetricCard
+                label="Activity"
+                value={pin.activity.toFixed(2)}
+                trend={pin.activity > 0.5 ? "up" : "flat"}
+                trendLabel={pin.activity > 0.5 ? "high" : "low"}
+              />
+            )}
+            {pin.speedPxS !== undefined && (
+              <MetricCard
+                label="Speed"
+                value={`${pin.speedPxS.toFixed(1)} px/s`}
+                trend="flat"
+                trendLabel="current"
+              />
+            )}
+            {pin.immobility !== undefined && (
+              <MetricCard
+                label="Immobility"
+                value={pin.immobility.toFixed(2)}
+                trend={pin.immobility > 0.8 ? "up" : "flat"}
+                trendLabel={pin.immobility > 0.8 ? "high" : "normal"}
+                improving={pin.immobility <= 0.8}
+              />
+            )}
+            {pin.dispersionPx !== undefined && (
+              <MetricCard
+                label="Dispersion"
+                value={`${pin.dispersionPx.toFixed(1)} px`}
+                trend="flat"
+                trendLabel="spatial spread"
+              />
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Anomaly */}
+      {pin.anomalyScore !== undefined && (
         <div
+          className="border flex items-center justify-between"
           style={{
-            fontSize: 11,
-            color: "var(--muted-foreground)",
-            marginTop: 2,
+            borderRadius: 8,
+            padding: "10px 12px",
+            background: hasAnomaly ? "var(--severity-critical-bg)" : undefined,
           }}
         >
-          Sentinel-2 L2A · 10m resolution
+          <span style={{ fontSize: 13 }}>Anomaly score</span>
+          <span
+            style={{
+              fontSize: 13,
+              fontWeight: 600,
+              color: hasAnomaly ? "var(--severity-critical)" : "var(--muted-foreground)",
+            }}
+          >
+            {pin.anomalyScore.toFixed(3)}
+          </span>
+        </div>
+      )}
+
+      {/* Timestamp */}
+      <div className="border" style={{ borderRadius: 8, padding: 12 }}>
+        <SectionLabel>Latest reading</SectionLabel>
+        <div style={{ fontSize: 13, marginTop: 4 }}>
+          {pin.lastReading === "Latest"
+            ? "Latest"
+            : new Date(pin.lastReading).toLocaleString("en-US", {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
         </div>
       </div>
 
       <div>
-        <h3>Station NDCI · 6 months</h3>
+        <h3>Sensor node NDCI · 6 months</h3>
         <TrendChart data={trendNDCI} warning={0.1} critical={0.2} />
       </div>
     </>
+  )
+}
+
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <div
+      style={{
+        fontSize: 11,
+        textTransform: "uppercase",
+        letterSpacing: "0.05em",
+        color: "var(--muted-foreground)",
+        fontWeight: 500,
+      }}
+    >
+      {children}
+    </div>
   )
 }
 
