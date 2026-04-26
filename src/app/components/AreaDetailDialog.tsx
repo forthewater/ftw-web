@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
 import L from "leaflet"
 import "leaflet/dist/leaflet.css"
-import { X, MapPin, Layers, Pencil, Activity } from "lucide-react"
+import { X, MapPin, Pencil } from "lucide-react"
 import { Button } from "./ui/button"
 import { SeverityBadge, type Severity } from "./SeverityBadge"
 import { MetricCard } from "./MetricCard"
@@ -24,15 +24,6 @@ const SEV_COLOR: Record<Severity, string> = {
   info: "#185FA5",
 }
 
-// NDCI heatmap colour scale matching the legend
-function ndciColor(ndci: number): string {
-  if (ndci > 0.2) return "#A32D2D"
-  if (ndci > 0.1) return "#f0c14a"
-  if (ndci > 0.05) return "#c8b942"
-  if (ndci >= 0) return "#2c6e7d"
-  return "#1f4a72"
-}
-
 // ── Main component ────────────────────────────────────────────────────────────
 
 export function AreaDetailDialog({
@@ -50,7 +41,6 @@ export function AreaDetailDialog({
 }) {
   const { pins } = usePins(area?.id ?? "")
   const [selected, setSelected] = useState<string | null>(null)
-  const [overlay, setOverlay] = useState<"none" | "ndci">("ndci")
 
   if (!area) return null
 
@@ -123,70 +113,14 @@ export function AreaDetailDialog({
             </div>
           </header>
 
-          <div className="flex-1 min-h-0 flex flex-col lg:flex-row">
-            <div className="relative flex-1 min-h-[320px] lg:min-h-0" style={{ isolation: "isolate" }}>
+          <div className="flex-1 min-h-0 overflow-y-auto lg:overflow-hidden flex flex-col lg:flex-row">
+            <div className="relative h-[320px] lg:flex-1 lg:h-auto shrink-0" style={{ isolation: "isolate" }}>
               <MapCanvas
                 area={area}
                 pins={pins}
                 selectedId={selected}
                 onSelect={setSelected}
-                overlay={overlay}
               />
-
-              {/* Overlay toggle */}
-              <div className="absolute top-3 left-3 z-[1000] flex flex-col gap-2">
-                <div
-                  className="bg-card border flex"
-                  style={{ borderRadius: 8, padding: 4, gap: 2 }}
-                >
-                  <ToggleBtn
-                    active={overlay === "ndci"}
-                    onClick={() => setOverlay("ndci")}
-                  >
-                    <Layers size={12} /> NDCI overlay
-                  </ToggleBtn>
-                  <ToggleBtn
-                    active={overlay === "none"}
-                    onClick={() => setOverlay("none")}
-                  >
-                    None
-                  </ToggleBtn>
-                </div>
-              </div>
-
-              {/* NDCI legend */}
-              <div
-                className="absolute bottom-8 left-3 z-[1000] bg-card border"
-                style={{ borderRadius: 8, padding: "8px 10px", fontSize: 11 }}
-              >
-                <div style={{ fontWeight: 500, marginBottom: 4 }}>
-                  NDCI legend
-                </div>
-                <div
-                  className="flex gap-2 items-center"
-                  style={{ color: "var(--muted-foreground)" }}
-                >
-                  {[
-                    { c: "#1f4a72", l: "<0" },
-                    { c: "#2c6e7d", l: "0.05" },
-                    { c: "#c8b942", l: "0.10" },
-                    { c: "#f0c14a", l: "0.20" },
-                    { c: "#A32D2D", l: ">0.20" },
-                  ].map((x) => (
-                    <span key={x.l} className="flex items-center gap-1">
-                      <span
-                        style={{
-                          width: 10,
-                          height: 10,
-                          background: x.c,
-                          borderRadius: 2,
-                        }}
-                      />
-                      {x.l}
-                    </span>
-                  ))}
-                </div>
-              </div>
 
               {/* Station count badge */}
               <div
@@ -202,7 +136,7 @@ export function AreaDetailDialog({
               </div>
             </div>
 
-            <aside className="lg:w-[360px] lg:border-l border-t lg:border-t-0 overflow-auto bg-card shrink-0">
+            <aside className="lg:w-[360px] lg:border-l border-t lg:border-t-0 lg:overflow-auto bg-card shrink-0">
               <div className="p-5 space-y-5">
                 {selectedPin ? (
                   <PinDetail
@@ -210,7 +144,7 @@ export function AreaDetailDialog({
                     onClear={() => setSelected(null)}
                   />
                 ) : (
-                  <AreaSummary area={area} pins={pins} alerts={areaAlerts} />
+                  <AreaSummary area={area} alerts={areaAlerts} />
                 )}
               </div>
             </aside>
@@ -228,18 +162,15 @@ function MapCanvas({
   pins,
   selectedId,
   onSelect,
-  overlay,
 }: {
   area: Area
   pins: Pin[]
   selectedId: string | null
   onSelect: (id: string) => void
-  overlay: "none" | "ndci"
 }) {
   const containerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<L.Map | null>(null)
   const markersRef = useRef<Map<string, L.CircleMarker>>(new Map())
-  const haloLayersRef = useRef<L.Circle[]>([])
   const onSelectRef = useRef(onSelect)
   const key = geometryKey(area.waterBodyDetails)
 
@@ -259,7 +190,6 @@ function MapCanvas({
       mapRef.current = null
     }
     markersRef.current.clear()
-    haloLayersRef.current = []
 
     const bounds: L.LatLngBoundsExpression = [
       [geometryBounds.south, geometryBounds.west],
@@ -326,7 +256,6 @@ function MapCanvas({
       map.remove()
       mapRef.current = null
       markersRef.current.clear()
-      haloLayersRef.current = []
     }
   }, [key, pins])
 
@@ -343,41 +272,6 @@ function MapCanvas({
       })
     })
   }, [selectedId, pins])
-
-  // Add / remove NDCI halo circles when overlay toggles
-  useEffect(() => {
-    const map = mapRef.current
-    if (!map) return
-    const geometryBounds = getGeometryBounds(area.waterBodyDetails)
-    if (!geometryBounds) return
-
-    // Remove existing halos
-    haloLayersRef.current.forEach((c) => c.remove())
-    haloLayersRef.current = []
-
-    if (overlay !== "ndci") return
-
-    // Estimate a radius in metres: ~20% of the shorter bbox dimension
-    const latSpan = Math.abs(geometryBounds.north - geometryBounds.south) * 111_320
-    const lonSpan =
-      Math.abs(geometryBounds.east - geometryBounds.west) *
-      111_320 *
-      Math.cos(((geometryBounds.north + geometryBounds.south) / 2) * (Math.PI / 180))
-    const haloRadius = Math.min(latSpan, lonSpan) * 0.22
-
-    pins.forEach((pin) => {
-      const halo = L.circle([pin.lat, pin.lon], {
-        radius: haloRadius,
-        color: "transparent",
-        fillColor: ndciColor(pin.ndci),
-        fillOpacity: 0.28,
-        interactive: false,
-      }).addTo(map)
-      haloLayersRef.current.push(halo)
-      // Ensure halos sit below markers
-      halo.bringToBack()
-    })
-  }, [overlay, pins, key])
 
   const geometryBounds = getGeometryBounds(area.waterBodyDetails)
 
@@ -398,24 +292,11 @@ function MapCanvas({
 
 function AreaSummary({
   area,
-  pins,
   alerts,
 }: {
   area: Area
-  pins: Pin[]
   alerts: Alert[]
 }) {
-  const avgNDCI = pins.length
-    ? pins.reduce((s, p) => s + p.ndci, 0) / pins.length
-    : 0
-  const worst = pins.length
-    ? pins.reduce((acc, p) => (p.ndci > acc.ndci ? p : acc), pins[0])
-    : null
-  const sevCount = pins.reduce<Record<Severity, number>>(
-    (acc, p) => ({ ...acc, [p.severity]: (acc[p.severity] ?? 0) + 1 }),
-    { critical: 0, warning: 0, ok: 0, info: 0 },
-  )
-
   const wm = area.weeklyWaterMetrics
   const lastWm = wm[wm.length - 1] ?? null
   const prevWm = wm[wm.length - 2] ?? null
@@ -438,88 +319,40 @@ function AreaSummary({
             marginTop: 2,
           }}
         >
-          {area.active ? "Active monitoring" : "Paused"} · {pins.length}{" "}
-          stations · indices {area.indices.join(" · ")}
+          {lastWm
+            ? `Last satellite pass · ${new Date(lastWm.from).toLocaleDateString("en-US", { month: "short", day: "numeric" })}–${new Date(lastWm.to).toLocaleDateString("en-US", { month: "short", day: "numeric" })}`
+            : "No satellite data"}
         </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-2">
-        <MetricCard
-          label="Avg NDCI"
-          value={avgNDCI.toFixed(2)}
-          trend="up"
-          trendLabel="across stations"
-        />
-        <MetricCard
-          label="Active alerts"
-          value={alerts.filter((a) => a.status === "active").length}
-          trend="flat"
-          trendLabel={`${alerts.length} total`}
-        />
-        {worst && (
-          <MetricCard
-            label="Worst station"
-            value={worst.name}
-            trend="up"
-            trendLabel={`NDCI ${worst.ndci.toFixed(2)}`}
-            improving={false}
-          />
-        )}
       </div>
 
       {lastWm && (
-        <div>
-          <h3 style={{ marginBottom: 6 }}>
-            Last satellite pass ·{" "}
-            {new Date(lastWm.from).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-            –
-            {new Date(lastWm.to).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-          </h3>
-          <div className="grid grid-cols-3 gap-2">
-            <MetricCard
-              label="NDCI"
-              value={lastWm.ndci.toFixed(3)}
-              trend={ndciDelta === null ? "flat" : ndciDelta > 0 ? "up" : ndciDelta < 0 ? "down" : "flat"}
-              trendLabel={ndciDelta !== null ? `${ndciDelta >= 0 ? "+" : ""}${ndciDelta.toFixed(3)} wow` : ""}
-              improving={ndciDelta !== null && ndciDelta <= 0}
-            />
-            <MetricCard
-              label="Turbidity"
-              value={lastWm.turbidity.toFixed(3)}
-              trend={turbDelta === null ? "flat" : turbDelta > 0 ? "up" : turbDelta < 0 ? "down" : "flat"}
-              trendLabel={turbDelta !== null ? `${turbDelta >= 0 ? "+" : ""}${turbDelta.toFixed(3)} wow` : ""}
-              improving={turbDelta !== null && turbDelta <= 0}
-            />
-            <MetricCard
-              label="NDWI"
-              value={lastWm.ndwi.toFixed(3)}
-              trend={ndwiDelta === null ? "flat" : ndwiDelta > 0 ? "up" : ndwiDelta < 0 ? "down" : "flat"}
-              trendLabel={ndwiDelta !== null ? `${ndwiDelta >= 0 ? "+" : ""}${ndwiDelta.toFixed(3)} wow` : ""}
-              improving={ndwiDelta !== null && ndwiDelta >= 0}
-            />
-          </div>
+        <div className="grid grid-cols-3 gap-2">
+          <MetricCard
+            label="NDCI"
+            description="Algae & chlorophyll"
+            value={lastWm.ndci.toFixed(3)}
+            trend={ndciDelta === null ? "flat" : ndciDelta > 0 ? "up" : ndciDelta < 0 ? "down" : "flat"}
+            trendLabel={ndciDelta !== null ? `${ndciDelta >= 0 ? "+" : ""}${ndciDelta.toFixed(3)} wow` : ""}
+            improving={ndciDelta !== null && ndciDelta <= 0}
+          />
+          <MetricCard
+            label="Turbidity"
+            description="Water clarity"
+            value={lastWm.turbidity.toFixed(3)}
+            trend={turbDelta === null ? "flat" : turbDelta > 0 ? "up" : turbDelta < 0 ? "down" : "flat"}
+            trendLabel={turbDelta !== null ? `${turbDelta >= 0 ? "+" : ""}${turbDelta.toFixed(3)} wow` : ""}
+            improving={turbDelta !== null && turbDelta <= 0}
+          />
+          <MetricCard
+            label="NDWI"
+            description="Water extent"
+            value={lastWm.ndwi.toFixed(3)}
+            trend={ndwiDelta === null ? "flat" : ndwiDelta > 0 ? "up" : ndwiDelta < 0 ? "down" : "flat"}
+            trendLabel={ndwiDelta !== null ? `${ndwiDelta >= 0 ? "+" : ""}${ndwiDelta.toFixed(3)} wow` : ""}
+            improving={ndwiDelta !== null && ndwiDelta >= 0}
+          />
         </div>
       )}
-
-      <div className="border" style={{ borderRadius: 8, padding: 12 }}>
-        <div className="flex items-center gap-2 mb-3">
-          <Activity size={14} />
-          <h3 style={{ marginBottom: 0 }}>Station status</h3>
-        </div>
-        <div className="space-y-1.5" style={{ fontSize: 12 }}>
-          <StatusRow
-            label="Critical"
-            count={sevCount.critical}
-            color={SEV_COLOR.critical}
-          />
-          <StatusRow
-            label="Warning"
-            count={sevCount.warning}
-            color={SEV_COLOR.warning}
-          />
-          <StatusRow label="OK" count={sevCount.ok} color={SEV_COLOR.ok} />
-        </div>
-      </div>
 
       <div>
         <h3>NDCI · {wm.length}-week trend</h3>
@@ -591,6 +424,7 @@ function PinDetail({ pin, onClear }: { pin: Pin; onClear: () => void }) {
       <div className="grid grid-cols-3 gap-2">
         <MetricCard
           label="NDCI"
+          description="Algae & chlorophyll"
           value={pin.ndci.toFixed(2)}
           trend={pin.ndci > 0.2 ? "up" : "flat"}
           trendLabel={
@@ -604,12 +438,14 @@ function PinDetail({ pin, onClear }: { pin: Pin; onClear: () => void }) {
         />
         <MetricCard
           label="NDTI"
+          description="Turbidity index"
           value={pin.ndti.toFixed(2)}
           trend="flat"
           trendLabel="clear"
         />
         <MetricCard
           label="NDWI"
+          description="Water extent"
           value={pin.ndwi.toFixed(2)}
           trend="down"
           trendLabel="-1% mom"
@@ -650,53 +486,3 @@ function PinDetail({ pin, onClear }: { pin: Pin; onClear: () => void }) {
   )
 }
 
-// ── Shared helpers ────────────────────────────────────────────────────────────
-
-function ToggleBtn({
-  active,
-  onClick,
-  children,
-}: {
-  active: boolean
-  onClick: () => void
-  children: React.ReactNode
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className="inline-flex items-center gap-1.5"
-      style={{
-        padding: "5px 10px",
-        borderRadius: 6,
-        background: active ? "var(--accent)" : "transparent",
-        color: active ? "var(--accent-foreground)" : "var(--foreground)",
-        fontSize: 12,
-        fontWeight: active ? 500 : 400,
-      }}
-    >
-      {children}
-    </button>
-  )
-}
-
-function StatusRow({
-  label,
-  count,
-  color,
-}: {
-  label: string
-  count: number
-  color: string
-}) {
-  return (
-    <div className="flex items-center justify-between">
-      <span className="flex items-center gap-2">
-        <span
-          style={{ width: 8, height: 8, borderRadius: 999, background: color }}
-        />
-        {label}
-      </span>
-      <span style={{ fontWeight: 500 }}>{count}</span>
-    </div>
-  )
-}

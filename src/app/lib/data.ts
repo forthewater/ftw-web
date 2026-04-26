@@ -84,7 +84,7 @@ export const areas: Area[] = [
     activeAlerts: 1,
     indices: ["NDCI", "NDTI", "NDWI"],
     waterBodyDetails: {
-      name: "Панчаревско езеро",
+      name: "Pancharevo Lake",
       polygon: [
         { lat: 42.5880169, lon: 23.4243249 },
         { lat: 42.588404,  lon: 23.4238873 },
@@ -133,7 +133,7 @@ export const areas: Area[] = [
     activeAlerts: 0,
     indices: ["NDCI", "NDWI"],
     waterBodyDetails: {
-      name: "Язовир Батак",
+      name: "Batak Reservoir",
       bbox: { west: 24.10, south: 41.92, east: 24.28, north: 42.04 },
     },
     weeklyWaterMetrics: [
@@ -150,7 +150,7 @@ export const areas: Area[] = [
     activeAlerts: 0,
     indices: ["NDCI"],
     waterBodyDetails: {
-      name: "Язовир Кърджали",
+      name: "Kardzhali Reservoir",
       bbox: { west: 25.30, south: 41.58, east: 25.48, north: 41.70 },
     },
     weeklyWaterMetrics: [
@@ -165,7 +165,7 @@ export const alerts: Alert[] = [
   {
     id: "a1",
     areaId: "iskar",
-    areaName: "Панчаревско езеро",
+    areaName: "Pancharevo Lake",
     severity: "critical",
     title: "Algae bloom risk — elevated chlorophyll",
     index: "NDCI",
@@ -199,7 +199,7 @@ export const alerts: Alert[] = [
   {
     id: "a3",
     areaId: "iskar",
-    areaName: "Панчаревско езеро",
+    areaName: "Pancharevo Lake",
     severity: "warning",
     title: "Water extent decreasing month-over-month",
     index: "NDWI",
@@ -217,7 +217,7 @@ export const alerts: Alert[] = [
   {
     id: "a4",
     areaId: "batak",
-    areaName: "Язовир Батак",
+    areaName: "Batak Reservoir",
     severity: "ok",
     title: "All indices within normal range",
     index: "NDCI",

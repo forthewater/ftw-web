@@ -20,21 +20,23 @@ export function AreaDrawer({
   area,
   onSave,
   onDelete,
+  onMapPointClick,
 }: {
   open: boolean;
   onOpenChange: (b: boolean) => void;
   area: Area | null;
   onSave: (a: Area) => void | Promise<void>;
   onDelete?: (id: string) => void;
+  onMapPointClick?: (coords: { lat: number; lng: number }) => void;
 }) {
   const isNew = !area;
   const [name, setName] = useState(area?.waterBodyDetails.name ?? "");
   const [bbox, setBbox] = useState(getGeometryBounds(area?.waterBodyDetails ?? {}) ?? DEFAULT_BBOX);
   const [indices, setIndices] = useState<Idx[]>((area?.indices as Idx[]) ?? ["NDCI", "NDTI", "NDWI"]);
   const [active, setActive] = useState(area?.active ?? true);
+  const [selectedPoint, setSelectedPoint] = useState<{ lat: number; lng: number } | null>(null);
   const [notify, setNotify] = useState("email");
   const [recipients, setRecipients] = useState("");
-  const [passes, setPasses] = useState(2);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
 
@@ -44,18 +46,13 @@ export function AreaDrawer({
       setBbox(getGeometryBounds(area?.waterBodyDetails ?? {}) ?? DEFAULT_BBOX);
       setIndices((area?.indices as Idx[]) ?? ["NDCI", "NDTI", "NDWI"]);
       setActive(area?.active ?? true);
+      setSelectedPoint(null);
       setSaveError(null);
       setSaving(false);
     }
   }, [open, area]);
 
-  const valid =
-    name.trim().length > 0 &&
-    bbox.west < bbox.east &&
-    bbox.south < bbox.north &&
-    bbox.west >= -180 && bbox.east <= 180 &&
-    bbox.south >= -90 && bbox.north <= 90 &&
-    indices.length > 0;
+  const valid = name.trim().length > 0 && indices.length > 0;
 
   const toggleIndex = (i: Idx) =>
     setIndices((prev) => (prev.includes(i) ? prev.filter((x) => x !== i) : [...prev, i]));
@@ -90,8 +87,8 @@ export function AreaDrawer({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="!w-full sm:!w-3/4 !max-w-[520px] sm:!max-w-[520px] overflow-auto p-0">
-        <SheetHeader className="border-b px-6 py-5">
+      <SheetContent className="!w-full sm:!w-3/4 !max-w-[520px] sm:!max-w-[520px] flex flex-col p-0">
+        <SheetHeader className="border-b px-6 py-5 shrink-0">
           <SheetTitle style={{ fontWeight: 500, fontSize: 18 }}>
             {isNew ? "Add monitored area" : "Edit area"}
           </SheetTitle>
@@ -100,9 +97,9 @@ export function AreaDrawer({
           </SheetDescription>
         </SheetHeader>
 
-        <div className="px-6 py-5 space-y-6">
+        <div className="px-6 py-5 space-y-6 overflow-y-auto flex-1">
           <Field label="Area name">
-            <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Язовир Искър, Black Sea Coast — Varna" />
+            <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Iskar Reservoir, Black Sea Coast — Varna" />
           </Field>
 
           {saveError && (
@@ -112,18 +109,17 @@ export function AreaDrawer({
           )}
 
           <div>
-            <Label>Bounding box (decimal degrees)</Label>
-            <div className="grid grid-cols-2 gap-2 mt-2">
-              <CoordInput label="West longitude" value={bbox.west} onChange={(v) => setBbox({ ...bbox, west: v })} />
-              <CoordInput label="East longitude" value={bbox.east} onChange={(v) => setBbox({ ...bbox, east: v })} />
-              <CoordInput label="South latitude" value={bbox.south} onChange={(v) => setBbox({ ...bbox, south: v })} />
-              <CoordInput label="North latitude" value={bbox.north} onChange={(v) => setBbox({ ...bbox, north: v })} />
-            </div>
-            <div style={{ fontSize: 11, color: "var(--muted-foreground)", marginTop: 6 }}>
-              Tip: use Google Maps to find coordinates. Right-click any point on the map to copy its latitude and longitude.
-            </div>
-            <div className="mt-3">
-              <BBoxMap bbox={bbox} caption={`west ${bbox.west} · south ${bbox.south} · east ${bbox.east} · north ${bbox.north}`} />
+            <Label>Area on map</Label>
+            <div className="mt-2">
+              <BBoxMap
+                bbox={bbox}
+                point={selectedPoint}
+                height={260}
+                onPointClick={(coords) => {
+                  setSelectedPoint(coords);
+                  onMapPointClick?.(coords);
+                }}
+              />
             </div>
           </div>
 
@@ -176,9 +172,6 @@ export function AreaDrawer({
                 placeholder="analyst@water.bg, +359 88 1234567"
               />
             </Field>
-            <Field label="Consecutive passes before alert fires">
-              <Input type="number" value={passes} onChange={(e) => setPasses(Number(e.target.value))} min={1} max={10} />
-            </Field>
           </div>
 
           <div className="flex items-center justify-between border-t pt-4">
@@ -190,7 +183,7 @@ export function AreaDrawer({
           </div>
         </div>
 
-        <SheetFooter className="border-t px-6 py-4 flex-row !justify-between !gap-3">
+        <SheetFooter className="border-t px-6 py-4 flex-row !justify-between !gap-3 shrink-0">
           {!isNew && onDelete ? (
             <Button
               variant="ghost"
@@ -222,15 +215,6 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
     <div className="space-y-1.5">
       <Label>{label}</Label>
       {children}
-    </div>
-  );
-}
-
-function CoordInput({ label, value, onChange }: { label: string; value: number; onChange: (v: number) => void }) {
-  return (
-    <div className="space-y-1">
-      <span style={{ fontSize: 11, color: "var(--muted-foreground)" }}>{label}</span>
-      <Input type="number" step="0.001" value={value} onChange={(e) => onChange(Number(e.target.value))} />
     </div>
   );
 }
