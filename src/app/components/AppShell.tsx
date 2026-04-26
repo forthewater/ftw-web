@@ -1,21 +1,18 @@
 import { useState } from "react"
+import { Link, useLocation } from "react-router"
 import { Bell, Map, Clock, Settings, Moon, Sun, Menu, X } from "lucide-react"
 import { Button } from "./ui/button"
 import type { Area } from "../lib/data"
 
-export type Route = "alerts" | "areas" | "history" | "settings"
+type NavRoute = "alerts" | "areas" | "history" | "settings"
 
 export function AppShell({
-  route,
-  onRoute,
   area,
   dark,
   onDark,
   children,
   totalActiveAlerts,
 }: {
-  route: Route
-  onRoute: (r: Route) => void
   area: Area | null
   dark: boolean
   onDark: () => void
@@ -23,18 +20,14 @@ export function AppShell({
   children: React.ReactNode
 }) {
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
+  const { pathname } = useLocation()
 
-  const navItems: { id: Route; label: string; icon: any; badge?: number }[] = [
+  const navItems: { id: NavRoute; label: string; icon: any; badge?: number }[] = [
     { id: "alerts", label: "Alerts", icon: Bell, badge: totalActiveAlerts },
     { id: "areas", label: "Areas", icon: Map },
     { id: "history", label: "Historical view", icon: Clock },
     { id: "settings", label: "Settings", icon: Settings },
   ]
-
-  const handleRoute = (r: Route) => {
-    onRoute(r)
-    setMobileNavOpen(false)
-  }
 
   const navContent = (
     <>
@@ -77,11 +70,12 @@ export function AppShell({
       </div>
       <nav className="px-2 py-3 flex-1 overflow-auto">
         {navItems.map(({ id, label, icon: Icon, badge }) => {
-          const active = route === id
+          const active = pathname.startsWith(`/${id}`)
           return (
-            <button
+            <Link
               key={id}
-              onClick={() => handleRoute(id)}
+              to={`/${id}`}
+              onClick={() => setMobileNavOpen(false)}
               className="w-full flex items-center justify-between px-3 py-2 mb-0.5 transition-colors"
               style={{
                 borderRadius: 6,
@@ -91,6 +85,7 @@ export function AppShell({
                   : "var(--foreground)",
                 fontSize: 13,
                 fontWeight: active ? 500 : 400,
+                textDecoration: "none",
               }}
             >
               <span className="flex items-center gap-2.5">
@@ -111,7 +106,7 @@ export function AppShell({
                   {badge}
                 </span>
               )}
-            </button>
+            </Link>
           )
         })}
       </nav>
