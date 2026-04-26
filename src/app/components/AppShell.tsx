@@ -22,18 +22,19 @@ export function AppShell({
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
   const { pathname } = useLocation()
 
-  const navItems: { id: NavRoute; label: string; icon: any; badge?: number }[] = [
-    { id: "alerts", label: "Alerts", icon: Bell, badge: totalActiveAlerts },
-    { id: "areas", label: "Areas", icon: Map },
-    { id: "history", label: "Historical view", icon: Clock },
-    { id: "settings", label: "Settings", icon: Settings },
-  ]
+  const navItems: { id: NavRoute; label: string; icon: any; badge?: number }[] =
+    [
+      { id: "alerts", label: "Alerts", icon: Bell, badge: totalActiveAlerts },
+      { id: "areas", label: "Areas", icon: Map },
+      { id: "history", label: "Historical view", icon: Clock },
+      { id: "settings", label: "Settings", icon: Settings },
+    ]
 
   const navContent = (
     <>
       <div className="px-5 py-5 border-b flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div
+        <div className="flex flex-col items-start gap-4">
+          {/* <div
             style={{
               width: 24,
               height: 24,
@@ -50,13 +51,19 @@ export function AppShell({
                 fill="#fff"
               />
             </svg>
+          </div> */}
+          <div
+            style={{
+              padding: "0.75rem",
+            }}
+            className="bg-white rounded-lg flex items-center justify-center max-w-1/2"
+          >
+            <img src="/logo.png" alt="Finora" />
           </div>
           <div>
-            <div style={{ fontSize: 13, fontWeight: 500 }}>
-              ForTheWater (FTW)
-            </div>
+            <div style={{ fontSize: 13, fontWeight: 500 }}>Finora</div>
             <div style={{ fontSize: 11, color: "var(--muted-foreground)" }}>
-              Water bodies monitoring
+              Predict • Protect • Preserve
             </div>
           </div>
         </div>

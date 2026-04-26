@@ -416,6 +416,17 @@ function AreaSummary({
     { critical: 0, warning: 0, ok: 0, info: 0 },
   )
 
+  const wm = area.weeklyWaterMetrics
+  const lastWm = wm[wm.length - 1] ?? null
+  const prevWm = wm[wm.length - 2] ?? null
+  const ndciDelta = lastWm && prevWm ? lastWm.ndci - prevWm.ndci : null
+  const turbDelta = lastWm && prevWm ? lastWm.turbidity - prevWm.turbidity : null
+  const ndwiDelta = lastWm && prevWm ? lastWm.ndwi - prevWm.ndwi : null
+  const ndciChartData = wm.map((m) => ({
+    month: new Date(m.to).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+    value: m.ndci,
+  }))
+
   return (
     <>
       <div>
@@ -456,6 +467,40 @@ function AreaSummary({
         )}
       </div>
 
+      {lastWm && (
+        <div>
+          <h3 style={{ marginBottom: 6 }}>
+            Last satellite pass ·{" "}
+            {new Date(lastWm.from).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+            –
+            {new Date(lastWm.to).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+          </h3>
+          <div className="grid grid-cols-3 gap-2">
+            <MetricCard
+              label="NDCI"
+              value={lastWm.ndci.toFixed(3)}
+              trend={ndciDelta === null ? "flat" : ndciDelta > 0 ? "up" : ndciDelta < 0 ? "down" : "flat"}
+              trendLabel={ndciDelta !== null ? `${ndciDelta >= 0 ? "+" : ""}${ndciDelta.toFixed(3)} wow` : ""}
+              improving={ndciDelta !== null && ndciDelta <= 0}
+            />
+            <MetricCard
+              label="Turbidity"
+              value={lastWm.turbidity.toFixed(3)}
+              trend={turbDelta === null ? "flat" : turbDelta > 0 ? "up" : turbDelta < 0 ? "down" : "flat"}
+              trendLabel={turbDelta !== null ? `${turbDelta >= 0 ? "+" : ""}${turbDelta.toFixed(3)} wow` : ""}
+              improving={turbDelta !== null && turbDelta <= 0}
+            />
+            <MetricCard
+              label="NDWI"
+              value={lastWm.ndwi.toFixed(3)}
+              trend={ndwiDelta === null ? "flat" : ndwiDelta > 0 ? "up" : ndwiDelta < 0 ? "down" : "flat"}
+              trendLabel={ndwiDelta !== null ? `${ndwiDelta >= 0 ? "+" : ""}${ndwiDelta.toFixed(3)} wow` : ""}
+              improving={ndwiDelta !== null && ndwiDelta >= 0}
+            />
+          </div>
+        </div>
+      )}
+
       <div className="border" style={{ borderRadius: 8, padding: 12 }}>
         <div className="flex items-center gap-2 mb-3">
           <Activity size={14} />
@@ -477,8 +522,8 @@ function AreaSummary({
       </div>
 
       <div>
-        <h3>NDCI trend · 6 months</h3>
-        <TrendChart data={trendNDCI} warning={0.1} critical={0.2} />
+        <h3>NDCI · {wm.length}-week trend</h3>
+        <TrendChart data={ndciChartData} warning={0.1} critical={0.2} />
       </div>
 
       <div>

@@ -11,8 +11,8 @@
   --popover: #ffffff;
   --popover-foreground: #1a1a1a;
 
-  /* Brand — primary blue */
-  --primary: #185FA5;
+  /* Brand — primary green */
+  --primary: #1A8532;
   --primary-foreground: #ffffff;
 
   /* Secondary surfaces (metric cards, muted) */
@@ -20,8 +20,8 @@
   --secondary-foreground: #1a1a1a;
   --muted: #F5F5F3;
   --muted-foreground: #888780;
-  --accent: #E6F1FB;
-  --accent-foreground: #185FA5;
+  --accent: #E6F5EC;
+  --accent-foreground: #1A8532;
 
   /* Destructive = danger red */
   --destructive: #A32D2D;
@@ -47,10 +47,10 @@
   --font-weight-normal: 400;
   --font-weight-medium: 500;
 
-  --ring: #185FA5;
+  --ring: #1A8532;
 
   /* Charts — water quality palette */
-  --chart-1: #185FA5; /* primary blue */
+  --chart-1: #1A8532; /* primary green */
   --chart-2: #3B6D11; /* green */
   --chart-3: #854F0B; /* amber */
   --chart-4: #A32D2D; /* red */
@@ -63,12 +63,12 @@
   /* Sidebar */
   --sidebar: #ffffff;
   --sidebar-foreground: #1a1a1a;
-  --sidebar-primary: #185FA5;
+  --sidebar-primary: #1A8532;
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #F5F5F3;
   --sidebar-accent-foreground: #1a1a1a;
   --sidebar-border: #E6E6E2;
-  --sidebar-ring: #185FA5;
+  --sidebar-ring: #1A8532;
 }
 
 .dark {
@@ -79,15 +79,15 @@
   --popover: #141618;
   --popover-foreground: #ECECEA;
 
-  --primary: #4A93D9;
+  --primary: #4BBE6A;
   --primary-foreground: #0E0F10;
 
   --secondary: #1A1C1E;
   --secondary-foreground: #ECECEA;
   --muted: #1A1C1E;
   --muted-foreground: #9A9994;
-  --accent: #14304A;
-  --accent-foreground: #BFD9F2;
+  --accent: #143A1E;
+  --accent-foreground: #A8E4BF;
 
   --destructive: #D9544F;
   --destructive-foreground: #ffffff;
@@ -106,9 +106,9 @@
   --severity-info: #6FAEE2;
   --severity-info-bg: #102A42;
 
-  --ring: #4A93D9;
+  --ring: #4BBE6A;
 
-  --chart-1: #4A93D9;
+  --chart-1: #4BBE6A;
   --chart-2: #8FBE5A;
   --chart-3: #D6A267;
   --chart-4: #E27676;
@@ -116,12 +116,12 @@
 
   --sidebar: #141618;
   --sidebar-foreground: #ECECEA;
-  --sidebar-primary: #4A93D9;
+  --sidebar-primary: #4BBE6A;
   --sidebar-primary-foreground: #0E0F10;
   --sidebar-accent: #1A1C1E;
   --sidebar-accent-foreground: #ECECEA;
   --sidebar-border: #25282B;
-  --sidebar-ring: #4A93D9;
+  --sidebar-ring: #4BBE6A;
 }
 
 @theme inline {

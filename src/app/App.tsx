@@ -48,6 +48,7 @@ type UIAction =
   | { type: "openDetail"; area: Area }
   | { type: "closeDetail" }
   | { type: "toggleDark" }
+  | { type: "setDark"; dark: boolean }
 
 const initialUI: UIState = {
   exportOpen: false,
@@ -74,6 +75,8 @@ function uiReducer(state: UIState, action: UIAction): UIState {
       return { ...state, detailOpen: false }
     case "toggleDark":
       return { ...state, dark: !state.dark }
+    case "setDark":
+      return { ...state, dark: action.dark }
   }
 }
 
@@ -105,7 +108,14 @@ function AlertDetailRoute({
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export default function App() {
-  const [ui, dispatch] = useReducer(uiReducer, initialUI)
+  const [ui, dispatch] = useReducer(uiReducer, undefined, (): UIState => {
+    const stored = localStorage.getItem("theme")
+    const dark =
+      stored === "dark" ? true
+      : stored === "light" ? false
+      : window.matchMedia("(prefers-color-scheme: dark)").matches
+    return { ...initialUI, dark }
+  })
   const [activeArea, setActiveArea] = useState<Area | null>(null)
   const navigate = useNavigate()
   const location = useLocation()
@@ -126,6 +136,24 @@ export default function App() {
     refetch: refetchAlerts,
   } = useAlerts(activeArea?.id)
 
+  // Sync dark class to <html> and persist to localStorage
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", ui.dark)
+    localStorage.setItem("theme", ui.dark ? "dark" : "light")
+  }, [ui.dark])
+
+  // Follow system preference changes when no manual override is stored
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-color-scheme: dark)")
+    const onChange = (e: MediaQueryListEvent) => {
+      if (!localStorage.getItem("theme")) {
+        dispatch({ type: "setDark", dark: e.matches })
+      }
+    }
+    mq.addEventListener("change", onChange)
+    return () => mq.removeEventListener("change", onChange)
+  }, [])
+
   // Refetch data on every route change
   useEffect(() => {
     refetchAreas()
@@ -138,7 +166,7 @@ export default function App() {
   )
 
   return (
-    <div className={ui.dark ? "dark" : ""}>
+    <div>
       <AppShell
         area={activeArea}
         dark={ui.dark}
