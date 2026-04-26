@@ -5,6 +5,7 @@ type Trend = "up" | "down" | "flat";
 
 export const MetricCard = memo(function MetricCard({
   label,
+  description,
   value,
   unit,
   trend,
@@ -12,6 +13,7 @@ export const MetricCard = memo(function MetricCard({
   improving,
 }: {
   label: string;
+  description?: string;
   value: string | number;
   unit?: string;
   trend?: Trend;
@@ -42,6 +44,11 @@ export const MetricCard = memo(function MetricCard({
       >
         {label}
       </div>
+      {description && (
+        <div style={{ fontSize: 10, color: "var(--muted-foreground)", marginTop: 1, opacity: 0.75 }}>
+          {description}
+        </div>
+      )}
       <div
         style={{ fontSize: 22, fontWeight: 500, color: "var(--foreground)", marginTop: 4 }}
       >

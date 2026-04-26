@@ -49,7 +49,6 @@ export function AreaDrawer({
   const [active, setActive] = useState(area?.active ?? true);
   const [notify, setNotify] = useState("email");
   const [recipients, setRecipients] = useState("");
-  const [passes, setPasses] = useState(2);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
 
@@ -114,8 +113,8 @@ export function AreaDrawer({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="!w-full sm:!w-3/4 !max-w-[520px] sm:!max-w-[520px] overflow-auto p-0">
-        <SheetHeader className="border-b px-6 py-5">
+      <SheetContent className="!w-full sm:!w-3/4 !max-w-[520px] sm:!max-w-[520px] flex flex-col p-0">
+        <SheetHeader className="border-b px-6 py-5 shrink-0">
           <SheetTitle style={{ fontWeight: 500, fontSize: 18 }}>
             {isNew ? "Add monitored area" : "Edit area"}
           </SheetTitle>
@@ -124,9 +123,9 @@ export function AreaDrawer({
           </SheetDescription>
         </SheetHeader>
 
-        <div className="px-6 py-5 space-y-6">
+        <div className="px-6 py-5 space-y-6 overflow-y-auto flex-1">
           <Field label="Area name">
-            <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Язовир Искър, Black Sea Coast — Varna" />
+            <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Iskar Reservoir, Black Sea Coast — Varna" />
           </Field>
 
           {saveError && (
@@ -195,9 +194,6 @@ export function AreaDrawer({
                 placeholder="analyst@water.bg, +359 88 1234567"
               />
             </Field>
-            <Field label="Consecutive passes before alert fires">
-              <Input type="number" value={passes} onChange={(e) => setPasses(Number(e.target.value))} min={1} max={10} />
-            </Field>
           </div>
 
           <div className="flex items-center justify-between border-t pt-4">
@@ -209,7 +205,7 @@ export function AreaDrawer({
           </div>
         </div>
 
-        <SheetFooter className="border-t px-6 py-4 flex-row !justify-between !gap-3">
+        <SheetFooter className="border-t px-6 py-4 flex-row !justify-between !gap-3 shrink-0">
           {!isNew && onDelete ? (
             <Button
               variant="ghost"
@@ -245,20 +241,25 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   );
 }
 
-function CoordInput({ label, value, onChange }: { label: string; value: number; onChange: (v: number) => void }) {
-  return (
-    <div className="space-y-1">
-      <span style={{ fontSize: 11, color: "var(--muted-foreground)" }}>{label}</span>
-      <Input type="number" step="0.001" value={value} onChange={(e) => onChange(Number(e.target.value))} />
-    </div>
-  );
-}
-
 function RadioOption({ value, label }: { value: string; label: string }) {
   return (
     <label className="flex items-center gap-2" style={{ fontSize: 13 }}>
       <RadioGroupItem value={value} id={value} />
       {label}
     </label>
+  );
+}
+
+function CoordInput({ label, value, onChange }: { label: string; value: number; onChange: (v: number) => void }) {
+  return (
+    <div className="space-y-1">
+      <Label style={{ fontSize: 11 }}>{label}</Label>
+      <Input
+        type="number"
+        step="0.0001"
+        value={value}
+        onChange={(e) => onChange(parseFloat(e.target.value) || 0)}
+      />
+    </div>
   );
 }

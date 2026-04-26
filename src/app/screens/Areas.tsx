@@ -3,8 +3,14 @@ import { Button } from "../components/ui/button"
 import { Switch } from "../components/ui/switch"
 import { BBoxMap } from "../components/BBoxMap"
 import { Skeleton } from "../components/ui/skeleton"
-import type { Area } from "../lib/data"
-import { formatGeometryBounds } from "../lib/geometry"
+import type { Area, WeeklyWaterMetric } from "../lib/data"
+
+function formatWeeklySummary(metrics: WeeklyWaterMetric[]): string {
+  if (!metrics.length) return "No data"
+  const m = metrics[metrics.length - 1]
+  const date = new Date(m.to).toLocaleDateString("en-US", { month: "short", day: "numeric" })
+  return `${date} · NDCI ${m.ndci.toFixed(3)} · Turb ${m.turbidity.toFixed(3)} · NDWI ${m.ndwi.toFixed(3)}`
+}
 
 function AreaCardSkeleton() {
   return (
@@ -113,7 +119,7 @@ export function Areas({
                         fontFamily: "ui-monospace, monospace",
                       }}
                     >
-                      {formatGeometryBounds(a)}
+                      {formatWeeklySummary(a.weeklyWaterMetrics)}
                     </div>
                   </div>
                   <div className="flex items-center gap-2">

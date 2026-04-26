@@ -31,7 +31,7 @@ function slugify(value: string): string {
 }
 
 function normalizeArea(area: ApiArea, fallbackIndex = 0): Area {
-  const details = area.waterBodyDetails ?? {};
+  const details: Partial<NonNullable<ApiArea["waterBodyDetails"]>> = area.waterBodyDetails ?? {};
 
   const name =
     typeof details.name === "string" && details.name.trim().length > 0
